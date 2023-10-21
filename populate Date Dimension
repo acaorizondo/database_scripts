@@ -1,46 +1,97 @@
 USE [DATABASE_NAME]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_dwh_PopulateDateDim]    Script Date: 10/21/2023 2:44:20 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
+
 -- =============================================
 -- Author:		<Arturo Arias>
 -- Create date: <10/15/2023>
 -- Description:	<Populate date dimension table of the data warehouse>
 -- =============================================
-CREATE PROCEDURE [dbo].[sp_dwh_PopulateDateDim] 
-	-- Add the parameters for the stored procedure here
-	@StartDate date, 
-	@EndDate date
-AS
+
+SET NOCOUNT ON
+
+TRUNCATE TABLE DIM_Date
+
+DECLARE @CurrentDate DATE = '2016-01-01'
+DECLARE @EndDate DATE = '2020-12-31'
+
+WHILE @CurrentDate < @EndDate
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
+   INSERT INTO [dbo].[Dim_Date] (
+      [DateKey],
+      [Date],
+      [Day],
+      [DaySuffix],
+      [Weekday],
+      [WeekDayName],
+      [WeekDayName_Short],
+      [WeekDayName_FirstLetter],
+      [DOWInMonth],
+      [DayOfYear],
+      [WeekOfMonth],
+      [WeekOfYear],
+      [Month],
+      [MonthName],
+      [MonthName_Short],
+      [MonthName_FirstLetter],
+      [Quarter],
+      [QuarterName],
+      [QN],
+      [Year],
+      [MMYYYY],
+      [MonthYear],
+      [IsWeekend],
+      [IsHoliday]
+      )
+   SELECT DateKey = YEAR(@CurrentDate) * 10000 + MONTH(@CurrentDate) * 100 + DAY(@CurrentDate),
+      DATE = @CurrentDate,
+      Day = DAY(@CurrentDate),
+      [DaySuffix] = CASE 
+         WHEN DAY(@CurrentDate) = 1
+            OR DAY(@CurrentDate) = 21
+            OR DAY(@CurrentDate) = 31
+            THEN 'st'
+         WHEN DAY(@CurrentDate) = 2
+            OR DAY(@CurrentDate) = 22
+            THEN 'nd'
+         WHEN DAY(@CurrentDate) = 3
+            OR DAY(@CurrentDate) = 23
+            THEN 'rd'
+         ELSE 'th'
+         END,
+      WEEKDAY = DATEPART(dw, @CurrentDate),
+      WeekDayName = DATENAME(dw, @CurrentDate),
+      WeekDayName_Short = UPPER(LEFT(DATENAME(dw, @CurrentDate), 3)),
+      WeekDayName_FirstLetter = LEFT(DATENAME(dw, @CurrentDate), 1),
+      [DOWInMonth] = DAY(@CurrentDate),
+      [DayOfYear] = DATENAME(dy, @CurrentDate),
+      [WeekOfMonth] = DATEPART(WEEK, @CurrentDate) - DATEPART(WEEK, DATEADD(MM, DATEDIFF(MM, 0, @CurrentDate), 0)) + 1,
+      [WeekOfYear] = DATEPART(wk, @CurrentDate),
+      [Month] = MONTH(@CurrentDate),
+      [MonthName] = DATENAME(mm, @CurrentDate),
+      [MonthName_Short] = UPPER(LEFT(DATENAME(mm, @CurrentDate), 3)),
+      [MonthName_FirstLetter] = LEFT(DATENAME(mm, @CurrentDate), 1),
+      [Quarter] = DATEPART(q, @CurrentDate),
+      [QuarterName] = CASE 
+         WHEN DATENAME(qq, @CurrentDate) = 1
+            THEN 'First'
+         WHEN DATENAME(qq, @CurrentDate) = 2
+            THEN 'second'
+         WHEN DATENAME(qq, @CurrentDate) = 3
+            THEN 'third'
+         WHEN DATENAME(qq, @CurrentDate) = 4
+            THEN 'fourth'
+         END,
+      [QN] =  'Q' + CAST(DATEPART(QUARTER,@CurrentDate) AS NCHAR(1)),
+      [Year] = YEAR(@CurrentDate),
+      [MMYYYY] = RIGHT('0' + CAST(MONTH(@CurrentDate) AS VARCHAR(2)), 2) + CAST(YEAR(@CurrentDate) AS VARCHAR(4)),
+      [MonthYear] = CAST(YEAR(@CurrentDate) AS VARCHAR(4)) + UPPER(LEFT(DATENAME(mm, @CurrentDate), 3)),
+      [IsWeekend] = CASE 
+         WHEN DATENAME(dw, @CurrentDate) = 'Sunday'
+            OR DATENAME(dw, @CurrentDate) = 'Saturday'
+            THEN 1
+         ELSE 0
+         END,
+      [IsHoliday] = 0
 
-    -- Insert statements for procedure here
-	WITH seq(n) AS (SELECT 0 UNION ALL SELECT n + 1 FROM seq WHERE n < DATEDIFF(DAY, @StartDate, @EndDate)),
-           d(d) AS (SELECT DATEADD(DAY, n, @StartDate) FROM seq),
-           src AS  (SELECT
-                           [transaction_date]  = CONVERT(date, d),
-                           [year]              = DATEPART(YEAR, d),
-                           [month_number]      = FORMAT(d,'MM'),
-                           [year_month_number] = FORMAT(d,'yyyy-MM'),
-                           [year_month_short]  = FORMAT(d, 'yyyy-MMM'),
-                           [month_name_short]  = FORMAT(d,'MMM'),
-                           [month_name_long]   = FORMAT(d,'MMMM'),
-                           [day_of_week_number]= DATEPART(WEEKDAY, d),
-                           [day_of_week]       = DATENAME(WEEKDAY, d),
-                           [day_of_week_short] = FORMAT(d,'ddd'),
-                           [quarter]           =  'Q' + CAST(DATEPART(QUARTER,d) AS NCHAR(1)),
-                           [year_quarter]      = CAST(YEAR(d) AS NCHAR(4)) + '-Q' + CAST(DATEPART(QUARTER,d) AS NCHAR(1)),
-                           [week_number]       = DATEPART(WEEK, d)
-                           FROM d)
-INSERT INTO [dbo].[dimDate]
-SELECT * FROM src
-ORDER BY transaction_date
-OPTION (MAXRECURSION 0) 
-
+   SET @CurrentDate = DATEADD(DD, 1, @CurrentDate)
 END
