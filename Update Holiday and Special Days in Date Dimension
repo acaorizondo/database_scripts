@@ -1,0 +1,8 @@
+UPDATE Dim_Date
+SET [IsHoliday] = 1,
+[HolidayName] = 'Christmas'
+Where [Month] = 12 AND [DAY] = 25
+
+UPDATE Dim_Date
+SET SpecialDays = 'Valentines Day'
+Where [Month] = 2 AND [DAY] = 14
