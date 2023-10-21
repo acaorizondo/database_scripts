@@ -1,0 +1,17 @@
+CREATE TABLE dbo.dimDate
+(
+    [transaction_date] DATE NOT NULL PRIMARY KEY CLUSTERED,
+    [year] SMALLINT NOT NULL,
+    [month_number] NCHAR(2) NOT NULL,
+    [year_month_number] NCHAR(7) NOT NULL,
+    [year_month_short] NCHAR(8) NOT NULL,
+    [month_name_short] NCHAR(3) NOT NULL,
+    [month_name_long] NCHAR(9) NOT NULL,
+	  [day_number] INT NOT NULL,
+    [day_of_week_number] INT NOT NULL,
+    [day_of_week] NCHAR(9) NOT NULL,
+    [day_of_week_short] NCHAR(3) NOT NULL,
+    [quarter] NCHAR(2) NOT NULL,
+    [year_quarter] NCHAR(7) NOT NULL,
+    [week_number] TINYINT NOT NULL
+);
