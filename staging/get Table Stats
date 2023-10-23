@@ -1,0 +1,5 @@
+SELECT        CAST(t .object_id AS varchar(50)) AS id, CAST('AdventureWorks2022' AS varchar(50)) AS database_name, t .name AS table_name, SUM(p.rows) AS row_count
+FROM            sys.tables t INNER JOIN sys.partitions p ON t .object_id = p.object_id
+WHERE        p.index_id IN (0, 1)
+GROUP BY t .object_id, t .name
+ORDER BY SUM(p.rows) DESC;
