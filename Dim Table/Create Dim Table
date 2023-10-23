@@ -1,0 +1,21 @@
+USE [DWH_Test]
+GO
+
+/****** Object:  Table [dbo].[Dim_Table]    Script Date: 10/22/2023 9:37:13 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Dim_Table](
+	[id_dim_table] [int] IDENTITY(1,1) NOT NULL,
+	[id_table] [varchar](50) NOT NULL,
+	[table_name] [varchar](50) NOT NULL,
+	[database_name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_DimTable_1] PRIMARY KEY CLUSTERED 
+(
+	[id_dim_table] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
