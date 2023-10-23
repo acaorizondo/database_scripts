@@ -1,0 +1,35 @@
+USE [DWH_Test]
+GO
+
+/****** Object:  Table [dbo].[Fact_TableGrowth]    Script Date: 10/22/2023 9:48:54 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Fact_TableGrowth](
+	[id_f_table_growth] [bigint] IDENTITY(1,1) NOT NULL,
+	[number_of_rows] [bigint] NOT NULL,
+	[id_dim_date] [int] NOT NULL,
+	[id_dim_table] [int] NOT NULL,
+ CONSTRAINT [PK_Fact_TableGrowth] PRIMARY KEY CLUSTERED 
+(
+	[id_f_table_growth] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Fact_TableGrowth]  WITH CHECK ADD  CONSTRAINT [FK_Fact_TableGrowth_Dim_Date] FOREIGN KEY([id_dim_date])
+REFERENCES [dbo].[Dim_Date] ([DateKey])
+GO
+
+ALTER TABLE [dbo].[Fact_TableGrowth] CHECK CONSTRAINT [FK_Fact_TableGrowth_Dim_Date]
+GO
+
+ALTER TABLE [dbo].[Fact_TableGrowth]  WITH CHECK ADD  CONSTRAINT [FK_Fact_TableGrowth_Dim_Table] FOREIGN KEY([id_dim_table])
+REFERENCES [dbo].[Dim_Table] ([id_dim_table])
+GO
+
+ALTER TABLE [dbo].[Fact_TableGrowth] CHECK CONSTRAINT [FK_Fact_TableGrowth_Dim_Table]
+GO
