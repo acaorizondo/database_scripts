@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="LocalHost.ApolloERP"
+  DTS:DTSID="{715AF5B2-4721-4203-8E5E-3B85F64F7021}"
+  DTS:CreationName="OLEDB">
+  <DTS:PropertyExpression
+    DTS:Name="ConnectionString">@[$Project::SourceConnection]</DTS:PropertyExpression>
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=.;Initial Catalog=ApolloERP;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-DWH Template Package Extract-{AFEA92C6-7798-4F83-9CAF-1A1F53C7520D}LocalHost.ApolloERP;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

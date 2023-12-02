@@ -1,0 +1,2869 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/25/2023 11:39:31 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="NB085"
+  DTS:CreatorName="APOLLOSHIPS\aorizondo"
+  DTS:DTSID="{691ECCC9-6CD6-44A8-AE92-F7D2CA45C1D3}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="DWH Template Package Extract"
+  DTS:PackageType="5"
+  DTS:VersionBuild="102"
+  DTS:VersionGUID="{CABF1854-ADF3-4B09-A756-FC52FBC3C0B7}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.ApolloERP]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{D8297A55-D6ED-4D20-9455-9C7E8D141E7F}"
+      DTS:ObjectName="LocalHost.ApolloERP">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=ApolloERP;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-DWH Template Package Extract-{D8297A55-D6ED-4D20-9455-9C7E8D141E7F}LocalHost.ApolloERP;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[LocalHost.ApolloERP 1]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{0FAA6296-9CB5-4905-BB35-F0FCD7B4C00C}"
+      DTS:ObjectName="LocalHost.ApolloERP 1">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=ApolloERP;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-DWH Template Package Extract-{0FAA6296-9CB5-4905-BB35-F0FCD7B4C00C}LocalHost.ApolloERP 1;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DWH_Test]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{89FFB9AF-F205-43F1-A332-2058BCE4470E}"
+      DTS:ObjectName="localhost.DWH_Test">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::DWHConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DWH_Test;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-ETL-DWH_Test-{2211D4FD-2A8E-45B0-9358-112A3FF06347}localhost.DWH_Test;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="Audit key passed from calling package"
+      DTS:DTSID="{F04F329F-98CD-498A-939B-A79E7FA30081}"
+      DTS:ObjectName="ParentAuditKey">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">-1</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B4023A6B-7A29-46AF-A9C6-7B71150CCC3B}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="AuditKey">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8A7060CD-84B2-49E8-8A7A-5308CF5A4634}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DatabaseName">
+      <DTS:VariableValue
+        DTS:DataType="8">Staging</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0C7A607B-190B-4A0A-8108-090838513EA2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilteredRowCount">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E6007E22-35BD-459E-AE3E-663C064AE583}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountErrors">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{83912DA7-9779-41E7-9EFE-CD9E6C1E08E9}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountExtracts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D78EF2F7-01A7-4436-85C5-FEE46EB0C3B5}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountFinal">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C30183E0-3A1B-4814-B381-4701BAF92352}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInitial">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{77E56819-2540-41FB-992C-6B5830E3C2DF}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInserts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{77D20B88-AF0A-4512-BF2A-22A5A75089AF}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountUpdates">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{ED80231D-6C57-4F81-A09D-9531F2C0D0D8}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RunPackage">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0EE1AA9A-994B-42D6-B8E9-DC55351B4C9E}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A7DBA1FD-0A44-425C-908E-099450D933A0}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQueryWhere">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CA9D015C-A76E-4E90-8E2C-8172D88A12BE}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableMaxDateTime">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E523F905-D411-41F1-93F3-FCC1D407F6F1}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableName">
+      <DTS:VariableValue
+        DTS:DataType="8">TablesStats</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Extract from Source to Staging"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{0EFC7334-CAC0-48C4-A9CD-F4431B3CAD59}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Extract from Source to Staging">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Extract from Source to Staging\Copy data from source to staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{F721C01E-F2E0-4568-A217-193B064FEEA4}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Copy data from source to staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="Derived Column"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input].Columns[database_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="database_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[database_name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input].Columns[table_id]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="table_id"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_id]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input].Columns[table_name]"
+                          cachedDataType="wstr"
+                          cachedLength="128"
+                          cachedName="table_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input].Columns[date]"
+                          cachedDataType="dbDate"
+                          cachedName="date"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[date]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input].Columns[DateKey]"
+                          cachedDataType="i4"
+                          cachedName="DateKey"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[DateKey]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input].Columns[row_count]"
+                          cachedDataType="i8"
+                          cachedName="row_count"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[row_count]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_database_name]"
+                          name="dc_database_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,100,1252)#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[database_name]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,100,1252)database_name</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_id]"
+                          name="dc_table_id"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,100,1252)#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_id]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,100,1252)table_id</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_name]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_name]"
+                          name="dc_table_name"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,100,1252)#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_name]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,100,1252)table_name</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date]"
+                          dataType="dbDate"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date]"
+                          name="dc_date"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[date]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">date</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date_key]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date_key]"
+                          name="dc_date_key"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[DateKey]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">DateKey</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_row_count]"
+                          dataType="i8"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_row_count]"
+                          name="dc_row_count"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[row_count]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">row_count</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="Derived Column 1"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input].Columns[PrimaryKeyColumn]"
+                          cachedDataType="wstr"
+                          cachedLength="4000"
+                          cachedName="PrimaryKeyColumn"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[PrimaryKeyColumn]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input].Columns[DatabaseName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="DatabaseName"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[DatabaseName]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input].Columns[TableId]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="TableId"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableId]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC PrimaryKeyColumn]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="200"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC PrimaryKeyColumn]"
+                          name="DC PrimaryKeyColumn"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_STR,200,1252)#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[PrimaryKeyColumn]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_STR,200,1252)PrimaryKeyColumn</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC DatabaseName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC DatabaseName]"
+                          name="DC DatabaseName"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[DatabaseName]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">DatabaseName</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC TableId]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC TableId]"
+                          name="DC TableId"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableId]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">TableId</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Error Output]"
+                      description="Error Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Extract Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountExtracts</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join"
+                  componentClassID="Microsoft.MergeJoin"
+                  contactInfo="Merge Join;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Combine two sorted data flows into one using the FULL, LEFT, or INNER join. We recommend this transformation when data flows can be sorted at their sources."
+                  name="Merge Join"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of join to perform."
+                      name="JoinType"
+                      typeConverter="JoinType">2</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the number of columns in the ordering key."
+                      name="NumKeyColumns">2</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the null values are treated as equal values."
+                      name="TreatNullsAsEqual">true</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Indicates the requested maximum buffers per input before blocking."
+                      name="MaxBuffersPerInput">5</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input]"
+                      hasSideEffects="true"
+                      name="Merge Join Left Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_database_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_database_name"
+                          cachedSortKeyPosition="1"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_database_name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_table_id]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_table_id"
+                          cachedSortKeyPosition="2"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_table_id]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_table_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_table_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_table_name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_date]"
+                          cachedDataType="dbDate"
+                          cachedName="dc_date"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_date]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_date_key]"
+                          cachedDataType="i4"
+                          cachedName="dc_date_key"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_date_key]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_row_count]"
+                          cachedDataType="i8"
+                          cachedName="dc_row_count"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_row_count]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Right Input]"
+                      hasSideEffects="true"
+                      name="Merge Join Right Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Right Input].Columns[DC DatabaseName]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="DC DatabaseName"
+                          cachedSortKeyPosition="1"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC DatabaseName]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Right Input].Columns[DC TableId]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="DC TableId"
+                          cachedSortKeyPosition="2"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC TableId]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Right Input].Columns[DC PrimaryKeyColumn]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="200"
+                          cachedName="DC PrimaryKeyColumn"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC PrimaryKeyColumn]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output]"
+                      isSorted="true"
+                      name="Merge Join Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_database_name]"
+                          name="dc_database_name"
+                          sortKeyPosition="1">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_database_name]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_table_id]"
+                          name="dc_table_id"
+                          sortKeyPosition="2">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_table_id]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_table_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_table_name]"
+                          name="dc_table_name">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_table_name]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_date]"
+                          dataType="dbDate"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_date]"
+                          name="dc_date">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_date]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_date_key]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_date_key]"
+                          name="dc_date_key">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_date_key]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_row_count]"
+                          dataType="i8"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_row_count]"
+                          name="dc_row_count">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input].Columns[dc_row_count]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[DC PrimaryKeyColumn]"
+                          codePage="1252"
+                          dataType="str"
+                          length="200"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[DC PrimaryKeyColumn]"
+                          name="DC PrimaryKeyColumn">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="The input column associated with this output column"
+                              name="InputColumnID">#{Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Right Input].Columns[DC PrimaryKeyColumn]}</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk)"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="Read Source (Tables pk)"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">DECLARE @database_name VARCHAR(50);
+SET @database_name = 'ApolloERP';
+
+SELECT
+    CAST(@database_name AS VARCHAR(50)) AS DatabaseName,
+    CAST(t.object_id AS VARCHAR(50)) AS TableId,
+    t.name AS TableName,
+    CAST(
+        STUFF(
+            (
+                SELECT ', ' + c.name
+                FROM sys.indexes i2
+                INNER JOIN sys.index_columns ic2 ON i2.object_id = ic2.object_id AND i2.index_id = ic2.index_id
+                INNER JOIN sys.columns c ON t.object_id = c.object_id AND ic2.column_id = c.column_id
+                WHERE i2.object_id = t.object_id AND i2.is_primary_key = 1
+                FOR XML PATH(''), TYPE
+            ).value('.', 'NVARCHAR(200)'),
+            1, 2, ''
+        ) AS NVARCHAR(200)
+    ) AS PrimaryKeyColumn
+FROM sys.tables t;</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.ApolloERP]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.ApolloERP]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[DatabaseName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[DatabaseName]"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[DatabaseName]"
+                          name="DatabaseName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableId]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[TableId]"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableId]"
+                          name="TableId"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[TableName]"
+                          length="128"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableName]"
+                          name="TableName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[PrimaryKeyColumn]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[PrimaryKeyColumn]"
+                          length="4000"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[PrimaryKeyColumn]"
+                          name="PrimaryKeyColumn"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[DatabaseName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="DatabaseName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[TableId]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="TableId" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[TableName]"
+                          dataType="wstr"
+                          length="128"
+                          name="TableName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].ExternalColumns[PrimaryKeyColumn]"
+                          dataType="wstr"
+                          length="200"
+                          name="PrimaryKeyColumn" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[DatabaseName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[DatabaseName]"
+                          name="DatabaseName" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[TableId]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[TableId]"
+                          name="TableId" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[TableName]"
+                          dataType="wstr"
+                          length="128"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[TableName]"
+                          name="TableName" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[PrimaryKeyColumn]"
+                          dataType="wstr"
+                          length="200"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[PrimaryKeyColumn]"
+                          name="PrimaryKeyColumn" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count)"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="Read Source (Tables row count)"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">DECLARE @TodayDate DATE;
+SET @TodayDate = GETDATE();
+
+DECLARE @database_name varchar(50);
+SET @database_name = 'ApolloERP';
+	
+SELECT CAST(@database_name AS varchar(50)) AS database_name, 
+              CAST(t.object_id AS varchar(50)) AS table_id,
+              t.name AS table_name,
+              @TodayDate as date,
+              YEAR(@TodayDate) * 10000 + MONTH(@TodayDate) * 100 + DAY(@TodayDate) AS DateKey,
+             SUM(p.rows) AS row_count
+FROM sys.tables t INNER JOIN sys.partitions p ON t .object_id = p.object_id
+WHERE p.index_id IN (0, 1)
+GROUP BY t .object_id, t .name
+ORDER BY  row_count DESC;</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.ApolloERP]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.ApolloERP]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[database_name]"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[database_name]"
+                          name="database_name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[table_id]"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_id]"
+                          name="table_id"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_name]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[table_name]"
+                          length="128"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_name]"
+                          name="table_name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[date]"
+                          dataType="dbDate"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[date]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[date]"
+                          name="date"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[DateKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[DateKey]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[DateKey]"
+                          name="DateKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[row_count]"
+                          dataType="i8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[row_count]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[row_count]"
+                          name="row_count"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="database_name" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="table_id" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[table_name]"
+                          dataType="wstr"
+                          length="128"
+                          name="table_name" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[date]"
+                          dataType="dbDate"
+                          name="date" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[DateKey]"
+                          dataType="i4"
+                          name="DateKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].ExternalColumns[row_count]"
+                          dataType="i8"
+                          name="row_count" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[database_name]"
+                          name="database_name" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[table_id]"
+                          name="table_id" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[table_name]"
+                          dataType="wstr"
+                          length="128"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[table_name]"
+                          name="table_name" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[date]"
+                          dataType="dbDate"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[date]"
+                          name="date" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[DateKey]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[DateKey]"
+                          name="DateKey" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[row_count]"
+                          dataType="i8"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[row_count]"
+                          name="row_count" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort"
+                  componentClassID="Microsoft.Sort"
+                  contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+                  name="Sort"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                      name="EliminateDuplicates">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the maximum number of threads to use for sorting."
+                      expressionType="Notify"
+                      name="MaximumThreads">-1</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input]"
+                      name="Sort Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[DC DatabaseName]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="DC DatabaseName"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC DatabaseName]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">1</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[DC TableId]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="DC TableId"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC TableId]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">2</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[DatabaseName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="DatabaseName"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[DatabaseName]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[TableId]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="TableId"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableId]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[TableName]"
+                          cachedDataType="wstr"
+                          cachedLength="128"
+                          cachedName="TableName"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableName]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[PrimaryKeyColumn]"
+                          cachedDataType="wstr"
+                          cachedLength="4000"
+                          cachedName="PrimaryKeyColumn"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[PrimaryKeyColumn]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input].Columns[DC PrimaryKeyColumn]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="200"
+                          cachedName="DC PrimaryKeyColumn"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC PrimaryKeyColumn]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output]"
+                      isSorted="true"
+                      name="Sort Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC DatabaseName]"
+                          dataType="wstr"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC DatabaseName]"
+                          name="DC DatabaseName"
+                          sortKeyPosition="1">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC DatabaseName]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC TableId]"
+                          dataType="wstr"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC TableId]"
+                          name="DC TableId"
+                          sortKeyPosition="2">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC TableId]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DatabaseName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DatabaseName]"
+                          name="DatabaseName">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[DatabaseName]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[TableId]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[TableId]"
+                          name="TableId">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableId]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[TableName]"
+                          dataType="wstr"
+                          length="128"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[TableName]"
+                          name="TableName">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[TableName]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[PrimaryKeyColumn]"
+                          dataType="wstr"
+                          length="4000"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[PrimaryKeyColumn]"
+                          name="PrimaryKeyColumn">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output].Columns[PrimaryKeyColumn]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC PrimaryKeyColumn]"
+                          codePage="1252"
+                          dataType="str"
+                          length="200"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output].Columns[DC PrimaryKeyColumn]"
+                          name="DC PrimaryKeyColumn">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output].Columns[DC PrimaryKeyColumn]}</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1"
+                  componentClassID="Microsoft.Sort"
+                  contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                  description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+                  name="Sort 1"
+                  version="1">
+                  <properties>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                      name="EliminateDuplicates">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the maximum number of threads to use for sorting."
+                      expressionType="Notify"
+                      name="MaximumThreads">-1</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input]"
+                      name="Sort Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[database_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="database_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[database_name]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[table_id]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="table_id"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_id]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[table_name]"
+                          cachedDataType="wstr"
+                          cachedLength="128"
+                          cachedName="table_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_name]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[date]"
+                          cachedDataType="dbDate"
+                          cachedName="date"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[date]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[DateKey]"
+                          cachedDataType="i4"
+                          cachedName="DateKey"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[DateKey]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[row_count]"
+                          cachedDataType="i8"
+                          cachedName="row_count"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[row_count]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[dc_database_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_database_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_database_name]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">1</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[dc_table_id]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_table_id"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_id]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">2</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[dc_table_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_table_name"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_name]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[dc_date]"
+                          cachedDataType="dbDate"
+                          cachedName="dc_date"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[dc_date_key]"
+                          cachedDataType="i4"
+                          cachedName="dc_date_key"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date_key]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input].Columns[dc_row_count]"
+                          cachedDataType="i8"
+                          cachedName="dc_row_count"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_row_count]">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the comparison options for character data."
+                              name="NewComparisonFlags">0</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the sort order of the column."
+                              name="NewSortKeyPosition">0</property>
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output]"
+                      isSorted="true"
+                      name="Sort Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[database_name]"
+                          name="database_name">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[database_name]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[table_id]"
+                          name="table_id">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_id]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[table_name]"
+                          dataType="wstr"
+                          length="128"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[table_name]"
+                          name="table_name">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[table_name]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[date]"
+                          dataType="dbDate"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[date]"
+                          name="date">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[date]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[DateKey]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[DateKey]"
+                          name="DateKey">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[DateKey]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[row_count]"
+                          dataType="i8"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[row_count]"
+                          name="row_count">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output].Columns[row_count]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_database_name]"
+                          name="dc_database_name"
+                          sortKeyPosition="1">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_database_name]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_table_id]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_table_id]"
+                          name="dc_table_id"
+                          sortKeyPosition="2">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_id]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_table_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_table_name]"
+                          name="dc_table_name">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_table_name]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_date]"
+                          dataType="dbDate"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_date]"
+                          name="dc_date">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_date_key]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_date_key]"
+                          name="dc_date_key">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_date_key]}</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_row_count]"
+                          dataType="i8"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output].Columns[dc_row_count]"
+                          name="dc_row_count">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.Int32"
+                              description="Specifies the lineage identifier of the input column that is associated with this output column."
+                              name="SortColumnId">#{Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output].Columns[dc_row_count]}</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="Write Staging Table"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[dbo].[Tables_stats]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Connections[OleDbConnection]"
+                      connectionManagerID="{577EE43B-4DB0-4B0D-B5D7-BDC3A45C581C}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[localhost.Staging]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[dc_database_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_database_name"
+                          cachedSortKeyPosition="1"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[database_name]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_database_name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[dc_table_id]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_table_id"
+                          cachedSortKeyPosition="2"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[id_table]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_table_id]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[dc_table_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="dc_table_name"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[table_name]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_table_name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[dc_row_count]"
+                          cachedDataType="i8"
+                          cachedName="dc_row_count"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[rows]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_row_count]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[dc_date]"
+                          cachedDataType="dbDate"
+                          cachedName="dc_date"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[date]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_date]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[dc_date_key]"
+                          cachedDataType="i4"
+                          cachedName="dc_date_key"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[date_key]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[dc_date_key]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].Columns[DC PrimaryKeyColumn]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="200"
+                          cachedName="DC PrimaryKeyColumn"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[primary_key_column]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output].Columns[DC PrimaryKeyColumn]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[id]"
+                          dataType="i8"
+                          name="id" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[database_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="database_name" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[id_table]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="id_table" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[table_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="table_name" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[rows]"
+                          dataType="i8"
+                          name="rows" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[date]"
+                          dataType="dbDate"
+                          name="date" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[date_key]"
+                          dataType="i4"
+                          name="date_key" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input].ExternalColumns[primary_key_column]"
+                          codePage="1252"
+                          dataType="str"
+                          length="200"
+                          name="primary_key_column" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Derived Column Output]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Inputs[Sort Input]"
+                  name="Derived Column Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Derived Column Output1]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Inputs[Sort Input]"
+                  name="Derived Column Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Merge Join Output]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table.Inputs[OLE DB Destination Input]"
+                  name="Merge Join Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Outputs[Merge Join Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[OLE DB Source Output]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count).Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[OLE DB Source Output1]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1.Inputs[Derived Column Input]"
+                  name="OLE DB Source Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk).Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Row Count Output 1]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column.Inputs[Derived Column Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Outputs[Row Count Output 1]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Sort Output]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Left Input]"
+                  name="Sort Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1.Outputs[Sort Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Sort Output1]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join.Inputs[Merge Join Right Input]"
+                  name="Sort Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Sort.Outputs[Sort Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Extract from Source to Staging\Count rows in staging"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{18E22A73-7319-465A-90FA-E87812C78637}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count rows in staging"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{577EE43B-4DB0-4B0D-B5D7-BDC3A45C581C}"
+              SQLTask:SqlStatementSource="select count(*) from Tables_stats"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::RowCountInserts" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Extract from Source to Staging\Truncate staging table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{C6D66CBA-6996-4201-A71D-D27F65E9A86D}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Truncate staging table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{577EE43B-4DB0-4B0D-B5D7-BDC3A45C581C}"
+              SQLTask:SqlStatementSource="Truncate table Tables_stats" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{B14F813C-D5D2-41A6-8877-90AFDDC2B04A}"
+          DTS:From="Package\Extract from Source to Staging\Truncate staging table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Extract from Source to Staging\Copy data from source to staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{AD864DE8-EF85-4C88-A997-CB346BEE5BED}"
+          DTS:From="Package\Extract from Source to Staging\Copy data from source to staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Extract from Source to Staging\Count rows in staging" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Insert row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{39FC0441-E82A-4407-B06D-42CE47D485F0}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{89FFB9AF-F205-43F1-A332-2058BCE4470E}"
+          SQLTask:SqlStatementSource="spAuditBegin  ?,?,?,?,?,?,?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="AuditKey"
+            SQLTask:DtsVariableName="User::AuditKey" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::PackageID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="System::VersionGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="System::ExecutionInstanceGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="$Package::ParentAuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Run package?"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{53AD748D-0F22-4204-A569-CEEDBB3BF20F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Run package?"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{89FFB9AF-F205-43F1-A332-2058BCE4470E}"
+          SQLTask:SqlStatementSource="SELECT RunStatus FROM &#xA;RunPackages where &#xA;TableName = ? and DatabaseName = ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::RunPackage" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{856A01FC-7711-46A6-BE0D-BA202D24BC8E}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{89FFB9AF-F205-43F1-A332-2058BCE4470E}"
+          SQLTask:SqlStatementSource="spAuditEnd ?,?,?,?,?,?,?,?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::RowCountInitial"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::RowCountExtracts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::RowCountInserts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::RowCountUpdates"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::RowCountFinal"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="User::RowCountErrors"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::AuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="7"
+            SQLTask:DtsVariableName="User::FilteredRowCount"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{1B4FAA21-DED8-4D97-A57F-27D5164D5599}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::RunPackage]"
+      DTS:From="Package\Run package?"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Insert row into audit table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{E1A60855-1DF0-45BE-B76C-4BB14E3AD05E}"
+      DTS:From="Package\Insert row into audit table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Extract from Source to Staging" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{76798D91-7ABB-4ABB-9F8D-4A234DB350A2}"
+      DTS:From="Package\Extract from Source to Staging"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Update row into audit table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="240,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging"
+          TopLeft="30,95" />
+        <NodeLayout
+          Size="184,42"
+          Id="Package\Extract from Source to Staging\Count rows in staging"
+          TopLeft="59,175" />
+        <NodeLayout
+          Size="188,42"
+          Id="Package\Extract from Source to Staging\Truncate staging table"
+          TopLeft="56,15" />
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint]"
+          TopLeft="150,57">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38"
+              Start="0,0"
+              End="0,30.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint 1]"
+          TopLeft="150.5,137">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38"
+              Start="0,0"
+              End="0,30.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="311,249"
+          Size="311,292"
+          Id="Package\Extract from Source to Staging"
+          TopLeft="413,71" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Insert row into audit table"
+          TopLeft="85,201" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Run package?"
+          TopLeft="115,41" />
+        <NodeLayout
+          Size="210,42"
+          Id="Package\Update row into audit table"
+          TopLeft="856,196" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="188,83">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,118"
+              Start="0,0"
+              End="0,110.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,110.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,47.25,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="287,219.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="126,0"
+              Start="0,0"
+              End="118.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="118.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="724,217">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="132,0"
+              Start="0,0"
+              End="124.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="124.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count"
+          TopLeft="95,103" />
+        <NodeLayout
+          Size="167,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column 1"
+          TopLeft="368,181" />
+        <NodeLayout
+          Size="108,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Sort 1"
+          TopLeft="127,251" />
+        <NodeLayout
+          Size="237,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count)"
+          TopLeft="59,32" />
+        <NodeLayout
+          Size="99,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Sort"
+          TopLeft="388,251" />
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Merge Join"
+          TopLeft="222,347" />
+        <NodeLayout
+          Size="158,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Derived Column"
+          TopLeft="104,178" />
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table"
+          TopLeft="201,442" />
+        <NodeLayout
+          Size="201,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk)"
+          TopLeft="349,32" />
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Sort Output]"
+          TopLeft="181,293">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="86.6666666666667,54"
+              Start="0,0"
+              End="86.6666666666667,46.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.0148588410104" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,28.0148588410104"
+                    Point2="0,32.0148588410104"
+                    Point3="4,32.0148588410104" />
+                  <mssgle:LineSegment
+                    End="82.6666666666667,32.0148588410104" />
+                  <mssgle:CubicBezierSegment
+                    Point1="82.6666666666667,32.0148588410104"
+                    Point2="86.6666666666667,32.0148588410104"
+                    Point3="86.6666666666667,36.0148588410104" />
+                  <mssgle:LineSegment
+                    End="86.6666666666667,46.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Row Count Output 1]"
+          TopLeft="181.5,145">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33"
+              Start="0,0"
+              End="0,25.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[OLE DB Source Output1]"
+          TopLeft="450.5,74">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,107"
+              Start="0,0"
+              End="0,99.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,99.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[OLE DB Source Output]"
+          TopLeft="178.75,74">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,29"
+              Start="0,0"
+              End="0,21.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Merge Join Output]"
+          TopLeft="288.75,389">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53"
+              Start="0,0"
+              End="0,45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Derived Column Output1]"
+          TopLeft="451.5,223">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-14,28"
+              Start="0,0"
+              End="-14,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10"
+                    Point2="0,14"
+                    Point3="-4,14" />
+                  <mssgle:LineSegment
+                    End="-10,14" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-10,14"
+                    Point2="-14,14"
+                    Point3="-14,18" />
+                  <mssgle:LineSegment
+                    End="-14,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Derived Column Output]"
+          TopLeft="182,220">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31"
+              Start="0,0"
+              End="0,23.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Sort Output1]"
+          TopLeft="437.5,293">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-128.166666666667,54"
+              Start="0,0"
+              End="-128.166666666667,46.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.0148588410104" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,28.0148588410104"
+                    Point2="0,32.0148588410104"
+                    Point3="-4,32.0148588410104" />
+                  <mssgle:LineSegment
+                    End="-124.166666666667,32.0148588410104" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-124.166666666667,32.0148588410104"
+                    Point2="-128.166666666667,32.0148588410104"
+                    Point3="-128.166666666667,36.0148588410104" />
+                  <mssgle:LineSegment
+                    End="-128.166666666667,46.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables row count)">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging\Write Staging Table">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (Tables pk)">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

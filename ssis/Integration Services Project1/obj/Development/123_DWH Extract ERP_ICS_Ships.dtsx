@@ -1,0 +1,1464 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/25/2023 11:39:31 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="NB085"
+  DTS:CreatorName="APOLLOSHIPS\aorizondo"
+  DTS:DTSID="{54EB20BD-E426-4D2D-810E-62F57102C50A}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="DWH Extract ERP_ICS_Ships"
+  DTS:PackageType="5"
+  DTS:VersionBuild="147"
+  DTS:VersionGUID="{FC28BF6C-390E-4B46-836C-942919D317A9}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DWH_Test]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{5158A225-55F7-4B99-8E9D-9D8757068375}"
+      DTS:ObjectName="localhost.DWH_Test">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::DWHConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DWH_Test;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-ETL-DWH_Test-{2211D4FD-2A8E-45B0-9358-112A3FF06347}localhost.DWH_Test;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="Audit key passed from calling package"
+      DTS:DTSID="{4D770043-005E-40EF-BB1D-A3994B41527B}"
+      DTS:ObjectName="ParentAuditKey">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">-1</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{967DB402-A662-46E2-BE0E-2AAE23DDFFFF}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="AuditKey">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AB2A2F00-0D6B-410F-9EC1-8AA01C218A1C}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DatabaseName">
+      <DTS:VariableValue
+        DTS:DataType="8">Staging</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7B44B07C-370A-4FB9-81BB-165F513983EB}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilteredRowCount">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{90975B73-FE77-4C1E-9DF3-A6C927173A01}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountErrors">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{780F0CD5-0316-436D-BBA3-DE8FFCA43A6F}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountExtracts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2AA17048-58CF-499C-92A8-60BA533B6931}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountFinal">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{538EB784-305B-4818-BFB9-374FA5A59A16}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInitial">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{39253EFB-2A6C-4C42-A3A9-60392751609E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInserts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{24CA1933-298C-48DF-A8E1-336118243FFB}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountUpdates">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A3928D98-CAF0-4122-9889-3F0081C1406B}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RunPackage">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{64AABDD1-B312-4E1F-A5FC-5AAD0E2470DB}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B474593F-8228-40AB-B618-6DE895EFE5DA}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQueryWhere">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{31D40B34-C8BE-4426-BC93-7C6F04BF8105}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableMaxDateTime">
+      <DTS:VariableValue
+        DTS:DataType="7">12:00:00 AM</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{731FADDF-8E21-42C3-9481-01C0A6C8EDDE}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableName">
+      <DTS:VariableValue
+        DTS:DataType="8">ERP_SM_Ship</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Extract from Source to Staging"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{0D606AF4-3B94-460B-B1EE-1B8870EE4B94}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Extract from Source to Staging">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Extract from Source to Staging\Copy data from source to staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{5AF09D45-7328-48B2-96BD-C3CA5F8A2705}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Copy data from source to staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Extract Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountExtracts</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship)"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="Read Source (SM_uvw_Ship)"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[SM].[uvw_Ship]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT ICS.Product.ProductKey, 
+       ICS.Product.Code AS ProductCode, 
+       ICS.Product.Name AS ProductName, 
+       ICS.ProductUnitMeasure.Code AS UnitMeasure, 
+       ICS.ProductUnitMeasure.Factor, 
+       ICS.Product.Flags AS ProductFlags, 
+       ICS.ProductDepartment.Code AS ProductDepartmentCode, 
+       ICS.ProductDepartment.Name AS ProductDepartment, 
+       ICS.ProductCategory.Code AS ProductCategoryCode, 
+       ICS.ProductCategory.Name AS ProductCategory, 
+       ICS.ProductSubCategory.Code AS ProductSubCategoryCode, 
+       ICS.ProductSubCategory.Name AS ProductSubCategory,
+       ICS.Product.IsDeleted,
+       ICS.Product.IsActive
+FROM   ICS.Product LEFT OUTER JOIN ICS.ProductUnitMeasure ON ICS.Product.StockProductUnitMeasureKey = ICS.ProductUnitMeasure.ProductUnitMeasureKey 
+                                    LEFT OUTER JOIN ICS.ProductCategory       ON ICS.Product.ProductCategoryKey                 = ICS.ProductCategory.ProductCategoryKey
+	                 LEFT OUTER JOIN ICS.ProductSubCategory ON ICS.Product.ProductSubCategoryKey          = ICS.ProductSubCategory.ProductSubCategoryKey 
+                                    LEFT OUTER JOIN ICS.ProductDepartment  ON ICS.Product.ProductDepartmentKey            = ICS.ProductDepartment.ProductDepartmentKey</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Connections[OleDbConnection]"
+                      connectionManagerID="{715AF5B2-4721-4203-8E5E-3B85F64F7021}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[LocalHost.ApolloERP]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupName]"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupName]"
+                          name="CompanyGroupName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyCode]"
+                          length="6"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]"
+                          name="ConcessionCompanyCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyName]"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]"
+                          name="ConcessionCompanyName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CruiseLineCode]"
+                          length="6"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CruiseLineCode]"
+                          name="CruiseLineCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CruiseLineName]"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CruiseLineName]"
+                          name="CruiseLineName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Code]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Code]"
+                          length="6"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Code]"
+                          name="Code"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Name]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Name]"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Name]"
+                          name="Name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Guests]"
+                          dataType="i2"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Guests]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Guests]"
+                          name="Guests"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Crew]"
+                          dataType="i2"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Crew]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Crew]"
+                          name="Crew"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupShipKey]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]"
+                          name="CompanyGroupShipKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[IsActive]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsActive]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[IsActive]"
+                          name="IsActive"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[IsClosed]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsClosed]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[IsClosed]"
+                          name="IsClosed"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupCode]"
+                          length="10"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupCode]"
+                          name="CompanyGroupCode"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsActive]"
+                          dataType="bool"
+                          name="IsActive" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[SiteId]"
+                          dataType="i2"
+                          name="SiteId" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          name="CompanyGroupCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CompanyGroupName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ConcessionCompanyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ConcessionCompanyName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Code]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="Code" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Name" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          name="CompanyGroupShipKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ShipConcessionCompanyKey]"
+                          dataType="guid"
+                          name="ShipConcessionCompanyKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsShipAssigned]"
+                          dataType="bool"
+                          name="IsShipAssigned" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsClosed]"
+                          dataType="bool"
+                          name="IsClosed" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsMigrated]"
+                          dataType="bool"
+                          name="IsMigrated" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Version]"
+                          codePage="1252"
+                          dataType="str"
+                          length="16"
+                          name="Version" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="CruiseLineCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CruiseLineName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[AllowConfirmDocumentsInPublisher]"
+                          dataType="bool"
+                          name="AllowConfirmDocumentsInPublisher" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[IsReplicationPublisher]"
+                          dataType="bool"
+                          name="IsReplicationPublisher" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[HostName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="HostName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ServerName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="ServerName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupKey]"
+                          dataType="guid"
+                          name="CompanyGroupKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ShipKey]"
+                          dataType="guid"
+                          name="ShipKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyKey]"
+                          dataType="guid"
+                          name="ConcessionCompanyKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupSiteKey]"
+                          dataType="guid"
+                          name="CompanyGroupSiteKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[SiteKey]"
+                          dataType="guid"
+                          name="SiteKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[CruiseLineKey]"
+                          dataType="guid"
+                          name="CruiseLineKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Guests]"
+                          dataType="i2"
+                          name="Guests" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].ExternalColumns[Crew]"
+                          dataType="i2"
+                          name="Crew" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CompanyGroupName]"
+                          name="CompanyGroupName" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyCode]"
+                          name="ConcessionCompanyCode" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyName]"
+                          name="ConcessionCompanyName" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CruiseLineCode]"
+                          name="CruiseLineCode" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CruiseLineName]"
+                          name="CruiseLineName" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Code]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Code]"
+                          name="Code" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Name]"
+                          name="Name" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Guests]"
+                          dataType="i2"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Guests]"
+                          name="Guests" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Crew]"
+                          dataType="i2"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[Crew]"
+                          name="Crew" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CompanyGroupShipKey]"
+                          name="CompanyGroupShipKey" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[IsActive]"
+                          dataType="bool"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[IsActive]"
+                          name="IsActive" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[IsClosed]"
+                          dataType="bool"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[IsClosed]"
+                          name="IsClosed" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Error Output].Columns[CompanyGroupCode]"
+                          name="CompanyGroupCode" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="Write in Staging"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[ERP].[SM_Ship]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Connections[OleDbConnection]"
+                      connectionManagerID="{577EE43B-4DB0-4B0D-B5D7-BDC3A45C581C}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[localhost.Staging]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[CompanyGroupName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CompanyGroupName"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupName]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupName]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[ConcessionCompanyCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="ConcessionCompanyCode"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyCode]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[ConcessionCompanyName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="ConcessionCompanyName"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyName]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[CruiseLineCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="CruiseLineCode"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineCode]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CruiseLineCode]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[CruiseLineName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CruiseLineName"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineName]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CruiseLineName]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[Code]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="Code"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ShipCode]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Code]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[Name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="Name"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Name]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[Guests]"
+                          cachedDataType="i2"
+                          cachedName="Guests"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[Guests]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Guests]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[Crew]"
+                          cachedDataType="i2"
+                          cachedName="Crew"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[Crew]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[Crew]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[CompanyGroupShipKey]"
+                          cachedDataType="guid"
+                          cachedName="CompanyGroupShipKey"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupShipKey]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[IsActive]"
+                          cachedDataType="bool"
+                          cachedName="IsActive"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[IsActive]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[IsActive]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[IsClosed]"
+                          cachedDataType="bool"
+                          cachedName="IsClosed"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[IsClosed]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[IsClosed]" />
+                        <inputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].Columns[CompanyGroupCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="10"
+                          cachedName="CompanyGroupCode"
+                          externalMetadataColumnId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupCode]"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output].Columns[CompanyGroupCode]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[IsActive]"
+                          dataType="bool"
+                          name="IsActive" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          name="CompanyGroupCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CompanyGroupName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ConcessionCompanyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ConcessionCompanyName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="CruiseLineCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CruiseLineName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ShipCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ShipCode" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ShipName" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[Guests]"
+                          dataType="i2"
+                          name="Guests" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[Crew]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Crew" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          name="CompanyGroupShipKey" />
+                        <externalMetadataColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input].ExternalColumns[IsClosed]"
+                          dataType="bool"
+                          name="IsClosed" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[OLE DB Source Output]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship).Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Row Count Output 1]"
+                  endId="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Extract from Source to Staging\Count rows in staging"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{A0ABE4D2-7DBA-486C-B85D-BC312913BCB1}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count rows in staging"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{577EE43B-4DB0-4B0D-B5D7-BDC3A45C581C}"
+              SQLTask:SqlStatementSource="select count(*) from [ERP].[SM_Ship]"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="0"
+                SQLTask:DtsVariableName="User::RowCountInserts" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Extract from Source to Staging\Truncate staging table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{1541B09D-A474-4E6D-8A60-D67478C3A5EF}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Truncate staging table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{577EE43B-4DB0-4B0D-B5D7-BDC3A45C581C}"
+              SQLTask:SqlStatementSource="Truncate table ERP.SM_Ship" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{4F9701B0-2A7B-4958-982E-E032948EB021}"
+          DTS:From="Package\Extract from Source to Staging\Truncate staging table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Extract from Source to Staging\Copy data from source to staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{147B7DAA-4B24-453F-9042-05ABB2487B2D}"
+          DTS:From="Package\Extract from Source to Staging\Copy data from source to staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Extract from Source to Staging\Count rows in staging" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Insert row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6C70FACC-D0F3-4818-AE68-EECC0D4B691D}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{5158A225-55F7-4B99-8E9D-9D8757068375}"
+          SQLTask:SqlStatementSource="spAuditBegin  ?,?,?,?,?,?,?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="AuditKey"
+            SQLTask:DtsVariableName="User::AuditKey" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::PackageID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="System::VersionGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="System::ExecutionInstanceGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="$Package::ParentAuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Run package?"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5ED39C41-463F-44D6-94CB-F1960C0CCA04}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Run package?"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{5158A225-55F7-4B99-8E9D-9D8757068375}"
+          SQLTask:SqlStatementSource="SELECT RunStatus FROM &#xA;RunPackages where &#xA;TableName = ? and DatabaseName = ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::RunPackage" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{ED362A62-3163-46E9-8F0D-72DF7832EAD1}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{5158A225-55F7-4B99-8E9D-9D8757068375}"
+          SQLTask:SqlStatementSource="spAuditEnd ?,?,?,?,?,?,?,?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::RowCountInitial"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::RowCountExtracts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::RowCountInserts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::RowCountUpdates"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::RowCountFinal"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="User::RowCountErrors"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::AuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="7"
+            SQLTask:DtsVariableName="User::FilteredRowCount"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{0F99585D-E62B-48BD-9741-F6D0795194B2}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::RunPackage]"
+      DTS:From="Package\Run package?"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Insert row into audit table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{0E5FC452-168C-4225-9E7F-9FBF4FB7D5D1}"
+      DTS:From="Package\Insert row into audit table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Extract from Source to Staging" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{1C74817C-8FCD-4498-91E9-EB58B3E4FBB0}"
+      DTS:From="Package\Extract from Source to Staging"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Update row into audit table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="240,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging"
+          TopLeft="28,177" />
+        <NodeLayout
+          Size="184,42"
+          Id="Package\Extract from Source to Staging\Count rows in staging"
+          TopLeft="59,265" />
+        <NodeLayout
+          Size="188,42"
+          Id="Package\Extract from Source to Staging\Truncate staging table"
+          TopLeft="58,92" />
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint]"
+          TopLeft="150,134">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43"
+              Start="0,0"
+              End="0,35.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging.PrecedenceConstraints[Constraint 1]"
+          TopLeft="149.5,219">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46"
+              Start="0,0"
+              End="0,38.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="311,362"
+          Size="311,405"
+          Id="Package\Extract from Source to Staging"
+          TopLeft="413,71" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Insert row into audit table"
+          TopLeft="76,246" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Run package?"
+          TopLeft="109,41" />
+        <NodeLayout
+          Size="210,42"
+          Id="Package\Update row into audit table"
+          TopLeft="857,251" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="180.5,83">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,163"
+              Start="0,0"
+              End="0,155.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,155.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,69.75,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="278,270.25">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="135,0"
+              Start="0,0"
+              End="127.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="127.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="724,272.75">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="133,0"
+              Start="0,0"
+              End="125.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="125.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="224,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship)"
+          TopLeft="63,31" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Extract Row Count"
+          TopLeft="94,122" />
+        <NodeLayout
+          Size="157,42"
+          Id="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging"
+          TopLeft="93,224" />
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[Row Count Output 1]"
+          TopLeft="175.25,164">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,60"
+              Start="0,0"
+              End="0,52.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,52.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Extract from Source to Staging\Copy data from source to staging.Paths[OLE DB Source Output]"
+          TopLeft="177,73">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49"
+              Start="0,0"
+              End="0,41.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,41.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging\Read Source (SM_uvw_Ship)">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">View</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Extract from Source to Staging\Copy data from source to staging\Write in Staging">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

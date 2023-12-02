@@ -1,0 +1,3048 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/25/2023 11:39:31 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="NB085"
+  DTS:CreatorName="APOLLOSHIPS\aorizondo"
+  DTS:DTSID="{6D6A8CBB-F24B-4D18-A741-3061DFF91592}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="DWH Template Package Transform_Load Fact"
+  DTS:PackageType="5"
+  DTS:VersionBuild="301"
+  DTS:VersionGUID="{8901DA4B-5789-4E28-A3D5-5D220006EEF4}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.AdventureWorks2022]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{DA5A6E01-E449-42A1-9065-E8977F3B7427}"
+      DTS:ObjectName="localhost.AdventureWorks2022">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::SourceConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=.;Initial Catalog=ApolloERP;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-DWH Template Package Extract-{AFEA92C6-7798-4F83-9CAF-1A1F53C7520D}LocalHost.ApolloERP;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DWH_Test]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+      DTS:ObjectName="localhost.DWH_Test">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::DWHConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DWH_Test;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-ETL-DWH_Test-{2211D4FD-2A8E-45B0-9358-112A3FF06347}localhost.DWH_Test;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.Staging]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{5132D405-1EFE-439B-B0BE-12FBB76D5C82}"
+      DTS:ObjectName="localhost.Staging">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::StagingConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=Staging;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{FD6C36E4-B51E-4F85-83CB-1C790B0F1F5D}localhost.Staging;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="Audit key passed from calling package"
+      DTS:DTSID="{B5DF37D1-31AB-4DD3-BD83-DED00146135E}"
+      DTS:ObjectName="ParentAuditKey">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">-1</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{7E5D6739-02CC-4D39-A7A0-63464D2FB780}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="AuditKey">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8E7283C9-F659-47CA-BD81-449DF141AC50}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DatabaseName">
+      <DTS:VariableValue
+        DTS:DataType="8">DWH_Test</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{964337EC-9A1E-4D36-947E-548E76DE83D9}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilteredRowCount">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{01F4B3EB-45EF-4FC9-869F-13BBBB59CB95}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="Incremental">
+      <DTS:VariableValue
+        DTS:DataType="11">-1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B9BBC289-4883-4FF4-A589-AFA5BB4F3A52}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountErrors">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{661EBAEC-9493-4526-B8A8-C9207C8B0DD0}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountExtracts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1BCA524B-B278-4FD6-B462-B0BC441A493E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountFinal">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F54CE271-95F7-40B7-9228-7BC7006DFA12}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInitial">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{01AD8B3C-E784-4C35-848A-3BC9731DA634}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInserts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{36D9C2BA-D279-453B-92FB-19C46B7F3593}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountUpdates">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2CCEA60A-3500-4076-8320-E523991F5659}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RunPackage">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{34C3EB47-E39D-4727-8BAD-BD0D1309B802}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A8986772-B79D-428E-A4D9-2AD16791556B}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQueryWhere">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{82EE93AA-820A-4740-AA05-4E646C053541}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableMaxDateTime">
+      <DTS:VariableValue
+        DTS:DataType="7">12:00:00 AM</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{5BBBC0F8-853F-4728-BE7D-4A211EF4ACE9}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableName">
+      <DTS:VariableValue
+        DTS:DataType="8">Fact_TableGrowth</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Insert row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{31C4003F-E430-461E-BDD3-AEDF9BF392D9}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+          SQLTask:SqlStatementSource="spAuditBegin  ?,?,?,?,?,?,?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="AuditKey"
+            SQLTask:DtsVariableName="User::AuditKey" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::PackageID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="System::VersionGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="System::ExecutionInstanceGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="$Package::ParentAuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load Fact"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{579986C5-A533-4F40-9533-631B96011601}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Fact">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact\Calculate Inserted Rows"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{D141B8E2-1A7F-485A-8ACC-368198BA7071}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Calculate Inserted Rows"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::RowCountInserts]= @[User::RowCountFinal]- @[User::RowCountInitial]" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact\Count Final Rows in Fact Table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{B0CD5698-FEEF-4071-AB2E-1B89BE9E8587}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count Final Rows in Fact Table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountFinal from audit.Fact_TableGrowth"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountFinal"
+                SQLTask:DtsVariableName="User::RowCountFinal" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact\Count initial Rows in Fact Table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{F45D9EC3-F46F-44B5-AAC5-5D0AC9D4ED34}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count initial Rows in Fact Table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountInitial from audit.Fact_TableGrowth"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountInitial"
+                SQLTask:DtsVariableName="User::RowCountInitial" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact\Full or FirstTime"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{8E372A6B-C1B3-489F-9213-A46CAF368F3E}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Full or FirstTime">
+          <DTS:Variables />
+          <DTS:Executables />
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact\Incremental Load"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{6F9574FF-D439-4A6F-A529-34A32B6E91D8}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Incremental Load">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Load Fact\Incremental Load\Get Last FactTable Insert"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{4540C751-9A05-4AA6-9069-FF9A9220A6BD}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get Last FactTable Insert"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+                  SQLTask:SqlStatementSource="select TableMaxDateTime &#xA;from audit.FactTable&#xA;where FactTable = ?"
+                  SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ResultBinding
+                    SQLTask:ResultName="0"
+                    SQLTask:DtsVariableName="User::TableMaxDateTime" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::TableName"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="129"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact"
+              DTS:CreationName="Microsoft.Pipeline"
+              DTS:Description="Data Flow Task"
+              DTS:DTSID="{6B2529BA-2AE0-40A7-88C9-8E5D999747FD}"
+              DTS:ExecutableType="Microsoft.Pipeline"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get new data from Staging &amp; Load Fact"
+              DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <pipeline
+                  version="1">
+                  <components>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Count Updated"
+                      componentClassID="Microsoft.RowCount"
+                      contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                      description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                      name="Count Updated">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the variable to hold the row count."
+                          name="VariableName">User::RowCountUpdates</property>
+                      </properties>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Count Updated.Inputs[Row Count Input 1]"
+                          hasSideEffects="true"
+                          name="Row Count Input 1">
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Count Updated.Outputs[Row Count Output 1]"
+                          name="Row Count Output 1"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Count Updated.Inputs[Row Count Input 1]">
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows"
+                      componentClassID="Microsoft.ConditionalSplit"
+                      contactInfo="Conditional Split;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                      description="Routes data rows to different outputs depending on the content of the data. Use conditions (SSIS expressions) to specify which rows are routed. For example, separate records that need to be cleaned from those that are ready to be loaded or route only a subset of records."
+                      name="Discard null rows"
+                      usesDispositions="true">
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Inputs[Conditional Split Input]"
+                          description="Input to the Conditional Split Transformation"
+                          name="Conditional Split Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Inputs[Conditional Split Input].Columns[primary_key_column]"
+                              cachedCodepage="1252"
+                              cachedDataType="str"
+                              cachedLength="200"
+                              cachedName="primary_key_column"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[primary_key_column]" />
+                          </inputColumns>
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[not_null_keys]"
+                          description="Output 1 of the Conditional Split Transformation"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          exclusionGroup="1"
+                          name="not_null_keys"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Inputs[Conditional Split Input]"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Specifies the expression. This expression version uses lineage identifiers instead of column names."
+                              name="Expression">![ISNULL](#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[primary_key_column]})</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Specifies the friendly version of the expression. This expression version uses column names."
+                              expressionType="Notify"
+                              name="FriendlyExpression">!ISNULL(primary_key_column)</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the position of the condition in the list of conditions that the transformation evaluates. The evaluation order is from the lowest to the highest value."
+                              name="EvaluationOrder">0</property>
+                          </properties>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[Conditional Split Default Output]"
+                          description="Default Output of the Conditional Split Transformation"
+                          exclusionGroup="1"
+                          name="Conditional Split Default Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Inputs[Conditional Split Input]">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              name="IsDefaultOut">true</property>
+                          </properties>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[Conditional Split Error Output]"
+                          description="Error Output of the Conditional Split Transformation"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="Conditional Split Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Inputs[Conditional Split Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count"
+                      componentClassID="Microsoft.RowCount"
+                      contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                      description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                      name="Extracted Row Count">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the variable to hold the row count."
+                          name="VariableName">User::RowCountExtracts</property>
+                      </properties>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count.Inputs[Row Count Input 1]"
+                          hasSideEffects="true"
+                          name="Row Count Input 1">
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count.Outputs[Row Count Output 1]"
+                          name="Row Count Output 1"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count.Inputs[Row Count Input 1]">
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count"
+                      componentClassID="Microsoft.RowCount"
+                      contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                      description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                      name="Filtered Row Count">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the variable to hold the row count."
+                          name="VariableName">User::FilteredRowCount</property>
+                      </properties>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count.Inputs[Row Count Input 1]"
+                          hasSideEffects="true"
+                          name="Row Count Input 1">
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count.Outputs[Row Count Output 1]"
+                          name="Row Count Output 1"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count.Inputs[Row Count Input 1]">
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows"
+                      componentClassID="Microsoft.ConditionalSplit"
+                      contactInfo="Conditional Split;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                      description="Routes data rows to different outputs depending on the content of the data. Use conditions (SSIS expressions) to specify which rows are routed. For example, separate records that need to be cleaned from those that are ready to be loaded or route only a subset of records."
+                      name="Get only new rows"
+                      usesDispositions="true">
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Inputs[Conditional Split Input]"
+                          description="Input to the Conditional Split Transformation"
+                          name="Conditional Split Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Inputs[Conditional Split Input].Columns[date]"
+                              cachedDataType="dbDate"
+                              cachedName="date"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date]" />
+                          </inputColumns>
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[new_rows]"
+                          description="Output 1 of the Conditional Split Transformation"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          exclusionGroup="1"
+                          name="new_rows"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Inputs[Conditional Split Input]"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Specifies the expression. This expression version uses lineage identifiers instead of column names."
+                              name="Expression">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date]} &gt; @[User::TableMaxDateTime]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Specifies the friendly version of the expression. This expression version uses column names."
+                              expressionType="Notify"
+                              name="FriendlyExpression">date &gt; @[User::TableMaxDateTime]</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the position of the condition in the list of conditions that the transformation evaluates. The evaluation order is from the lowest to the highest value."
+                              name="EvaluationOrder">0</property>
+                          </properties>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[Conditional Split Default Output]"
+                          description="Default Output of the Conditional Split Transformation"
+                          exclusionGroup="1"
+                          name="Conditional Split Default Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Inputs[Conditional Split Input]">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              name="IsDefaultOut">true</property>
+                          </properties>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[Conditional Split Error Output]"
+                          description="Error Output of the Conditional Split Transformation"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="Conditional Split Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Inputs[Conditional Split Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth"
+                      componentClassID="Microsoft.OLEDBDestination"
+                      contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                      description="OLE DB Destination"
+                      name="Insert Fact TableGrowth"
+                      usesDispositions="true"
+                      version="4">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                          name="CommandTimeout">0</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the name of the database object used to open a rowset."
+                          name="OpenRowset">[audit].[Fact_TableGrowth]</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the variable that contains the name of the database object used to open a rowset."
+                          name="OpenRowsetVariable"></property>
+                        <property
+                          dataType="System.String"
+                          description="The SQL command to be executed."
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the column code page to use when code page information is unavailable from the data source."
+                          name="DefaultCodePage">1252</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Forces the use of the DefaultCodePage property value when describing character data."
+                          name="AlwaysUseDefaultCodePage">false</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the mode used to access the database."
+                          name="AccessMode"
+                          typeConverter="AccessMode">3</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                          name="FastLoadKeepIdentity">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                          name="FastLoadKeepNulls">false</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                          name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                          name="FastLoadMaxInsertCommitSize">2147483647</property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Connections[OleDbConnection]"
+                          connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                          connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                          description="The OLE DB runtime connection used to access the database."
+                          name="OleDbConnection" />
+                      </connections>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input]"
+                          errorOrTruncationOperation="Insert"
+                          errorRowDisposition="FailComponent"
+                          hasSideEffects="true"
+                          name="OLE DB Destination Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].Columns[id_dim_table]"
+                              cachedDataType="i4"
+                              cachedName="id_dim_table"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[id_dim_table]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output].Columns[id_dim_table]" />
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].Columns[date_key]"
+                              cachedDataType="i4"
+                              cachedName="date_key"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[id_dim_date]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date_key]" />
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].Columns[rows]"
+                              cachedDataType="i8"
+                              cachedName="rows"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[number_of_rows]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[rows]" />
+                          </inputColumns>
+                          <externalMetadataColumns
+                            isUsed="True">
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[id_fact_table_growth]"
+                              dataType="i8"
+                              name="id_fact_table_growth" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[number_of_rows]"
+                              dataType="i8"
+                              name="number_of_rows" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[id_dim_date]"
+                              dataType="i4"
+                              name="id_dim_date" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input].ExternalColumns[id_dim_table]"
+                              dataType="i4"
+                              name="id_dim_table" />
+                          </externalMetadataColumns>
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Outputs[OLE DB Destination Error Output]"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="OLE DB Destination Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update"
+                      componentClassID="Microsoft.Lookup"
+                      contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                      description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                      name="Insert or Update"
+                      usesDispositions="true"
+                      version="6">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the SQL statement that generates the lookup table."
+                          expressionType="Notify"
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [audit].[Fact_TableGrowth]</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                          expressionType="Notify"
+                          name="SqlCommandParam"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [audit].[Fact_TableGrowth]) [refTable]
+where [refTable].[id_dim_date] = ? and [refTable].[id_dim_table] = ?</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the type of connection used to access the reference dataset."
+                          name="ConnectionType"
+                          typeConverter="LookupConnectionType">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the cache type of the lookup table."
+                          name="CacheType"
+                          typeConverter="CacheType">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                          name="NoMatchBehavior"
+                          typeConverter="LookupNoMatchBehavior">1</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                          name="NoMatchCachePercentage">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                          name="MaxMemoryUsage">25</property>
+                        <property
+                          dataType="System.Int64"
+                          description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                          name="MaxMemoryUsage64">25</property>
+                        <property
+                          dataType="System.String"
+                          description="Indicates whether to reference metadata in an XML format."
+                          name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="id_fact_table_growth" dataType="DT_I8" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="number_of_rows" dataType="DT_I8" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="id_dim_date" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="id_dim_table" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                          name="ParameterMap">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date_key]};#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output].Columns[id_dim_table]};</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the column code page to use when code page information is unavailable from the data source."
+                          name="DefaultCodePage">1252</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                          name="TreatDuplicateKeysAsError">false</property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Connections[OleDbConnection]"
+                          connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                          connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                          description="Connection manager used to access lookup data."
+                          name="OleDbConnection" />
+                      </connections>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input]"
+                          name="Lookup Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input].Columns[id_dim_table]"
+                              cachedDataType="i4"
+                              cachedName="id_dim_table"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output].Columns[id_dim_table]">
+                              <properties>
+                                <property
+                                  dataType="System.String"
+                                  description="Specifies the column in the reference table that a column joins."
+                                  name="JoinToReferenceColumn">id_dim_table</property>
+                                <property
+                                  dataType="System.Null"
+                                  description="Specifies the column in the reference table from which a column is copied."
+                                  name="CopyFromReferenceColumn" />
+                              </properties>
+                            </inputColumn>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input].Columns[date_key]"
+                              cachedDataType="i4"
+                              cachedName="date_key"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date_key]">
+                              <properties>
+                                <property
+                                  dataType="System.String"
+                                  description="Specifies the column in the reference table that a column joins."
+                                  name="JoinToReferenceColumn">id_dim_date</property>
+                                <property
+                                  dataType="System.Null"
+                                  description="Specifies the column in the reference table from which a column is copied."
+                                  name="CopyFromReferenceColumn" />
+                              </properties>
+                            </inputColumn>
+                          </inputColumns>
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output]"
+                          errorOrTruncationOperation="Lookup"
+                          exclusionGroup="1"
+                          name="Lookup Match Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output].Columns[new_number_of_rows]"
+                              dataType="i8"
+                              errorOrTruncationOperation="Copy Column"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output].Columns[new_number_of_rows]"
+                              name="new_number_of_rows"
+                              truncationRowDisposition="FailComponent">
+                              <properties>
+                                <property
+                                  dataType="System.String"
+                                  description="Specifies the column in the reference table from which a column is copied."
+                                  name="CopyFromReferenceColumn">number_of_rows</property>
+                              </properties>
+                            </outputColumn>
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup No Match Output]"
+                          description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                          exclusionGroup="1"
+                          name="Lookup No Match Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input]">
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Error Output]"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="Lookup Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows"
+                      componentClassID="Microsoft.Lookup"
+                      contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                      description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                      name="Lookup Dim_Table with active rows"
+                      usesDispositions="true"
+                      version="6">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the SQL statement that generates the lookup table."
+                          expressionType="Notify"
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [audit].[Dim_Table]</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                          expressionType="Notify"
+                          name="SqlCommandParam"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [audit].[Dim_Table] where [audit].[Dim_Table].[end_date] is null) [refTable]
+where [refTable].[id_table] = ? and [refTable].[database_name] = ?</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the type of connection used to access the reference dataset."
+                          name="ConnectionType"
+                          typeConverter="LookupConnectionType">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the cache type of the lookup table."
+                          name="CacheType"
+                          typeConverter="CacheType">1</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                          name="NoMatchBehavior"
+                          typeConverter="LookupNoMatchBehavior">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                          name="NoMatchCachePercentage">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                          name="MaxMemoryUsage">25</property>
+                        <property
+                          dataType="System.Int64"
+                          description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                          name="MaxMemoryUsage64">25</property>
+                        <property
+                          dataType="System.String"
+                          description="Indicates whether to reference metadata in an XML format."
+                          name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="id_dim_table" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="id_table" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="table_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="database_name" dataType="DT_STR" length="100" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="PrimaryKeyColumn" dataType="DT_STR" length="200" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="begin_date" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="end_date" dataType="DT_DBDATE" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                          name="ParameterMap">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[id_table]};#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[database_name]};</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the column code page to use when code page information is unavailable from the data source."
+                          name="DefaultCodePage">1252</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                          name="TreatDuplicateKeysAsError">false</property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Connections[OleDbConnection]"
+                          connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                          connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                          description="Connection manager used to access lookup data."
+                          name="OleDbConnection" />
+                      </connections>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input]"
+                          name="Lookup Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input].Columns[id_table]"
+                              cachedCodepage="1252"
+                              cachedDataType="str"
+                              cachedLength="100"
+                              cachedName="id_table"
+                              cachedSortKeyPosition="2"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[id_table]">
+                              <properties>
+                                <property
+                                  dataType="System.String"
+                                  description="Specifies the column in the reference table that a column joins."
+                                  name="JoinToReferenceColumn">id_table</property>
+                                <property
+                                  dataType="System.Null"
+                                  description="Specifies the column in the reference table from which a column is copied."
+                                  name="CopyFromReferenceColumn" />
+                              </properties>
+                            </inputColumn>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input].Columns[database_name]"
+                              cachedCodepage="1252"
+                              cachedDataType="str"
+                              cachedLength="100"
+                              cachedName="database_name"
+                              cachedSortKeyPosition="1"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[database_name]">
+                              <properties>
+                                <property
+                                  dataType="System.String"
+                                  description="Specifies the column in the reference table that a column joins."
+                                  name="JoinToReferenceColumn">database_name</property>
+                                <property
+                                  dataType="System.Null"
+                                  description="Specifies the column in the reference table from which a column is copied."
+                                  name="CopyFromReferenceColumn" />
+                              </properties>
+                            </inputColumn>
+                          </inputColumns>
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output]"
+                          errorOrTruncationOperation="Lookup"
+                          errorRowDisposition="IgnoreFailure"
+                          exclusionGroup="1"
+                          name="Lookup Match Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output].Columns[id_dim_table]"
+                              dataType="i4"
+                              errorOrTruncationOperation="Copy Column"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output].Columns[id_dim_table]"
+                              name="id_dim_table"
+                              truncationRowDisposition="FailComponent">
+                              <properties>
+                                <property
+                                  dataType="System.String"
+                                  description="Specifies the column in the reference table from which a column is copied."
+                                  name="CopyFromReferenceColumn">id_dim_table</property>
+                              </properties>
+                            </outputColumn>
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup No Match Output]"
+                          description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                          exclusionGroup="1"
+                          name="Lookup No Match Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input]">
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Error Output]"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="Lookup Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table"
+                      componentClassID="Microsoft.OLEDBSource"
+                      contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                      description="OLE DB Source"
+                      name="Read Staging Table"
+                      usesDispositions="true"
+                      version="7">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                          name="CommandTimeout">0</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the name of the database object used to open a rowset."
+                          name="OpenRowset">[dbo].[Tables_stats]</property>
+                        <property
+                          dataType="System.String"
+                          description="Specifies the variable that contains the name of the database object used to open a rowset."
+                          name="OpenRowsetVariable"></property>
+                        <property
+                          dataType="System.String"
+                          description="The SQL command to be executed."
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                        <property
+                          dataType="System.String"
+                          description="The variable that contains the SQL command to be executed."
+                          name="SqlCommandVariable"></property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the column code page to use when code page information is unavailable from the data source."
+                          name="DefaultCodePage">1252</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Forces the use of the DefaultCodePage property value when describing character data."
+                          name="AlwaysUseDefaultCodePage">false</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the mode used to access the database."
+                          name="AccessMode"
+                          typeConverter="AccessMode">0</property>
+                        <property
+                          dataType="System.String"
+                          description="The mappings between the parameters in the SQL command and variables."
+                          name="ParameterMapping"></property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Connections[OleDbConnection]"
+                          connectionManagerID="Package.ConnectionManagers[localhost.Staging]"
+                          connectionManagerRefId="Package.ConnectionManagers[localhost.Staging]"
+                          description="The OLE DB runtime connection used to access the database."
+                          name="OleDbConnection" />
+                      </connections>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output]"
+                          name="OLE DB Source Output">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[database_name]"
+                              codePage="1252"
+                              dataType="str"
+                              errorOrTruncationOperation="Conversion"
+                              errorRowDisposition="FailComponent"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[database_name]"
+                              length="100"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[database_name]"
+                              name="database_name"
+                              truncationRowDisposition="FailComponent" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[id_table]"
+                              codePage="1252"
+                              dataType="str"
+                              errorOrTruncationOperation="Conversion"
+                              errorRowDisposition="FailComponent"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[id_table]"
+                              length="100"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[id_table]"
+                              name="id_table"
+                              truncationRowDisposition="FailComponent" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[rows]"
+                              dataType="i8"
+                              errorOrTruncationOperation="Conversion"
+                              errorRowDisposition="FailComponent"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[rows]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[rows]"
+                              name="rows"
+                              truncationRowDisposition="FailComponent" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date_key]"
+                              dataType="i4"
+                              errorOrTruncationOperation="Conversion"
+                              errorRowDisposition="FailComponent"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[date_key]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date_key]"
+                              name="date_key"
+                              truncationRowDisposition="FailComponent" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[primary_key_column]"
+                              codePage="1252"
+                              dataType="str"
+                              errorOrTruncationOperation="Conversion"
+                              errorRowDisposition="FailComponent"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[primary_key_column]"
+                              length="200"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[primary_key_column]"
+                              name="primary_key_column"
+                              truncationRowDisposition="FailComponent" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date]"
+                              dataType="dbDate"
+                              errorOrTruncationOperation="Conversion"
+                              errorRowDisposition="FailComponent"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[date]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date]"
+                              name="date"
+                              truncationRowDisposition="FailComponent" />
+                          </outputColumns>
+                          <externalMetadataColumns
+                            isUsed="True">
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[id]"
+                              dataType="i8"
+                              name="id" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[database_name]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              name="database_name" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[id_table]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              name="id_table" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[table_name]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              name="table_name" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[rows]"
+                              dataType="i8"
+                              name="rows" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[date]"
+                              dataType="dbDate"
+                              name="date" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[date_key]"
+                              dataType="i4"
+                              name="date_key" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[primary_key_column]"
+                              codePage="1252"
+                              dataType="str"
+                              length="200"
+                              name="primary_key_column" />
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].ExternalColumns[schema_name]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              name="schema_name" />
+                          </externalMetadataColumns>
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output]"
+                          isErrorOut="true"
+                          name="OLE DB Source Error Output">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[database_name]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[database_name]"
+                              name="database_name" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[id_table]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[id_table]"
+                              name="id_table" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[rows]"
+                              dataType="i8"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[rows]"
+                              name="rows" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[date_key]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[date_key]"
+                              name="date_key" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[primary_key_column]"
+                              codePage="1252"
+                              dataType="str"
+                              length="200"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[primary_key_column]"
+                              name="primary_key_column" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[date]"
+                              dataType="dbDate"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Error Output].Columns[date]"
+                              name="date" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change"
+                      componentClassID="Microsoft.ConditionalSplit"
+                      contactInfo="Conditional Split;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                      description="Routes data rows to different outputs depending on the content of the data. Use conditions (SSIS expressions) to specify which rows are routed. For example, separate records that need to be cleaned from those that are ready to be loaded or route only a subset of records."
+                      name="Row_count change"
+                      usesDispositions="true">
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input]"
+                          description="Input to the Conditional Split Transformation"
+                          name="Conditional Split Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input].Columns[rows]"
+                              cachedDataType="i8"
+                              cachedName="rows"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[rows]" />
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input].Columns[new_number_of_rows]"
+                              cachedDataType="i8"
+                              cachedName="new_number_of_rows"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output].Columns[new_number_of_rows]" />
+                          </inputColumns>
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[change_number_rows]"
+                          description="Output 1 of the Conditional Split Transformation"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          exclusionGroup="1"
+                          name="change_number_rows"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input]"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Specifies the expression. This expression version uses lineage identifiers instead of column names."
+                              name="Expression">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output].Columns[new_number_of_rows]} != #{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[rows]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Specifies the friendly version of the expression. This expression version uses column names."
+                              expressionType="Notify"
+                              name="FriendlyExpression">new_number_of_rows != rows</property>
+                            <property
+                              dataType="System.Int32"
+                              description="Specifies the position of the condition in the list of conditions that the transformation evaluates. The evaluation order is from the lowest to the highest value."
+                              name="EvaluationOrder">0</property>
+                          </properties>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[Conditional Split Default Output]"
+                          description="Default Output of the Conditional Split Transformation"
+                          exclusionGroup="1"
+                          name="Conditional Split Default Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input]">
+                          <properties>
+                            <property
+                              dataType="System.Boolean"
+                              name="IsDefaultOut">true</property>
+                          </properties>
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[Conditional Split Error Output]"
+                          description="Error Output of the Conditional Split Transformation"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="Conditional Split Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table"
+                      componentClassID="Microsoft.Sort"
+                      contactInfo="Sort;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;1"
+                      description="Sorts input data in ascending or descending order when it cannot be sorted at its source. For example, sort sales data by 'customer id' before it is written to a flat file and delivered to another department. Note: We do not recommend this transformation for large data flows."
+                      name="Sort Table"
+                      version="1">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indicates whether the Sort transformation removes rows with duplicate sort values."
+                          name="EliminateDuplicates">false</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the maximum number of threads to use for sorting."
+                          expressionType="Notify"
+                          name="MaximumThreads">-1</property>
+                      </properties>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input]"
+                          name="Sort Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input].Columns[id_table]"
+                              cachedCodepage="1252"
+                              cachedDataType="str"
+                              cachedLength="100"
+                              cachedName="id_table"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[id_table]">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the comparison options for character data."
+                                  name="NewComparisonFlags">0</property>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the sort order of the column."
+                                  name="NewSortKeyPosition">2</property>
+                              </properties>
+                            </inputColumn>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input].Columns[rows]"
+                              cachedDataType="i8"
+                              cachedName="rows"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[rows]">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the comparison options for character data."
+                                  name="NewComparisonFlags">0</property>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the sort order of the column."
+                                  name="NewSortKeyPosition">0</property>
+                              </properties>
+                            </inputColumn>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input].Columns[date_key]"
+                              cachedDataType="i4"
+                              cachedName="date_key"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date_key]">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the comparison options for character data."
+                                  name="NewComparisonFlags">0</property>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the sort order of the column."
+                                  name="NewSortKeyPosition">0</property>
+                              </properties>
+                            </inputColumn>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input].Columns[database_name]"
+                              cachedCodepage="1252"
+                              cachedDataType="str"
+                              cachedLength="100"
+                              cachedName="database_name"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[database_name]">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the comparison options for character data."
+                                  name="NewComparisonFlags">0</property>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the sort order of the column."
+                                  name="NewSortKeyPosition">1</property>
+                              </properties>
+                            </inputColumn>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input].Columns[date]"
+                              cachedDataType="dbDate"
+                              cachedName="date"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date]">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the comparison options for character data."
+                                  name="NewComparisonFlags">0</property>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Specifies the sort order of the column."
+                                  name="NewSortKeyPosition">3</property>
+                              </properties>
+                            </inputColumn>
+                          </inputColumns>
+                          <externalMetadataColumns />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output]"
+                          isSorted="true"
+                          name="Sort Output">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[id_table]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[id_table]"
+                              name="id_table"
+                              sortKeyPosition="2">
+                              <properties>
+                                <property
+                                  containsID="true"
+                                  dataType="System.Int32"
+                                  description="Specifies the lineage identifier of the input column that is associated with this output column."
+                                  name="SortColumnId">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[id_table]}</property>
+                              </properties>
+                            </outputColumn>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[rows]"
+                              dataType="i8"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[rows]"
+                              name="rows">
+                              <properties>
+                                <property
+                                  containsID="true"
+                                  dataType="System.Int32"
+                                  description="Specifies the lineage identifier of the input column that is associated with this output column."
+                                  name="SortColumnId">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[rows]}</property>
+                              </properties>
+                            </outputColumn>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date_key]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date_key]"
+                              name="date_key">
+                              <properties>
+                                <property
+                                  containsID="true"
+                                  dataType="System.Int32"
+                                  description="Specifies the lineage identifier of the input column that is associated with this output column."
+                                  name="SortColumnId">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date_key]}</property>
+                              </properties>
+                            </outputColumn>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[database_name]"
+                              codePage="1252"
+                              dataType="str"
+                              length="100"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[database_name]"
+                              name="database_name"
+                              sortKeyPosition="1">
+                              <properties>
+                                <property
+                                  containsID="true"
+                                  dataType="System.Int32"
+                                  description="Specifies the lineage identifier of the input column that is associated with this output column."
+                                  name="SortColumnId">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[database_name]}</property>
+                              </properties>
+                            </outputColumn>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date]"
+                              dataType="dbDate"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date]"
+                              name="date"
+                              sortKeyPosition="3">
+                              <properties>
+                                <property
+                                  containsID="true"
+                                  dataType="System.Int32"
+                                  description="Specifies the lineage identifier of the input column that is associated with this output column."
+                                  name="SortColumnId">#{Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output].Columns[date]}</property>
+                              </properties>
+                            </outputColumn>
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth"
+                      componentClassID="Microsoft.OLEDBCommand"
+                      contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+                      description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+                      name="Update Fact TableGrowth"
+                      usesDispositions="true"
+                      version="2">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                          name="CommandTimeout">0</property>
+                        <property
+                          dataType="System.String"
+                          description="The SQL command to be executed."
+                          expressionType="Notify"
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">UPDATE audit.Fact_TableGrowth 
+SET number_of_rows=? 
+WHERE id_dim_date=? and id_dim_table =?</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the column code page to use when code page information is unavailable from the data source."
+                          name="DefaultCodePage">1252</property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Connections[OleDbConnection]"
+                          connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                          connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                          description="The OLE DB runtime connection used to access the database."
+                          name="OleDbConnection" />
+                      </connections>
+                      <inputs>
+                        <input
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input]"
+                          errorOrTruncationOperation="Command Execution"
+                          errorRowDisposition="FailComponent"
+                          hasSideEffects="true"
+                          name="OLE DB Command Input">
+                          <inputColumns>
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].Columns[new_number_of_rows]"
+                              cachedDataType="i8"
+                              cachedName="new_number_of_rows"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output].Columns[new_number_of_rows]" />
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].Columns[date_key]"
+                              cachedDataType="i4"
+                              cachedName="date_key"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output].Columns[date_key]" />
+                            <inputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].Columns[id_dim_table]"
+                              cachedDataType="i4"
+                              cachedName="id_dim_table"
+                              externalMetadataColumnId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output].Columns[id_dim_table]" />
+                          </inputColumns>
+                          <externalMetadataColumns
+                            isUsed="True">
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                              dataType="i8"
+                              name="Param_0">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                                  name="DBParamInfoFlags">81</property>
+                              </properties>
+                            </externalMetadataColumn>
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                              dataType="i4"
+                              name="Param_1">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                                  name="DBParamInfoFlags">81</property>
+                              </properties>
+                            </externalMetadataColumn>
+                            <externalMetadataColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                              dataType="i4"
+                              name="Param_2">
+                              <properties>
+                                <property
+                                  dataType="System.Int32"
+                                  description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                                  name="DBParamInfoFlags">81</property>
+                              </properties>
+                            </externalMetadataColumn>
+                          </externalMetadataColumns>
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Output]"
+                          exclusionGroup="1"
+                          name="OLE DB Command Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input]">
+                          <externalMetadataColumns />
+                        </output>
+                        <output
+                          refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Error Output]"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="OLE DB Command Error Output"
+                          synchronousInputId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                  </components>
+                  <paths>
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[change_number_rows]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Inputs[OLE DB Command Input]"
+                      name="change_number_rows"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Outputs[change_number_rows]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Lookup Match Output]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change.Inputs[Conditional Split Input]"
+                      name="Lookup Match Output"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup Match Output]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Lookup Match Output1]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Inputs[Lookup Input]"
+                      name="Lookup Match Output"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Outputs[Lookup Match Output]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Lookup No Match Output]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth.Inputs[OLE DB Destination Input]"
+                      name="Lookup No Match Output"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update.Outputs[Lookup No Match Output]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[new_rows]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Inputs[Sort Input]"
+                      name="new_rows"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Outputs[new_rows]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[not_null_keys]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows.Inputs[Conditional Split Input]"
+                      name="not_null_keys"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Outputs[not_null_keys]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[OLE DB Command Output]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Count Updated.Inputs[Row Count Input 1]"
+                      name="OLE DB Command Output"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth.Outputs[OLE DB Command Output]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[OLE DB Source Output]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count.Inputs[Row Count Input 1]"
+                      name="OLE DB Source Output"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table.Outputs[OLE DB Source Output]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Row Count Output 1]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows.Inputs[Lookup Input]"
+                      name="Row Count Output 1"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count.Outputs[Row Count Output 1]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Row Count Output 11]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows.Inputs[Conditional Split Input]"
+                      name="Row Count Output 1"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count.Outputs[Row Count Output 1]" />
+                    <path
+                      refId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Sort Output]"
+                      endId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count.Inputs[Row Count Input 1]"
+                      name="Sort Output"
+                      startId="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table.Outputs[Sort Output]" />
+                  </paths>
+                </pipeline>
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Load Fact\Incremental Load\Get new DateMax"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{339DD413-9BC6-4A82-BC94-301330A39D09}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Get new DateMax"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+                  SQLTask:SqlStatementSource="SELECT        MAX(Dim_Date.Date) AS MaxDateInserted&#xA;FROM            audit.Fact_TableGrowth INNER JOIN&#xA;                      Dim_Date ON audit.Fact_TableGrowth.id_dim_date = Dim_Date.DateKey"
+                  SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ResultBinding
+                    SQLTask:ResultName="0"
+                    SQLTask:DtsVariableName="User::TableMaxDateTime" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Load Fact\Incremental Load\Insert in Aggregate Table"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{085B52B5-9684-4571-A4AB-973DD25EAB20}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Insert in Aggregate Table"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+                  SQLTask:SqlStatementSource="WITH CTE AS (&#xA;    SELECT&#xA;        id_dim_date,&#xA;        id_dim_table,&#xA;        number_of_rows,&#xA;        LAG(number_of_rows, 1) OVER (PARTITION BY id_dim_table ORDER BY id_dim_date) AS number_of_rows_previous&#xA;    FROM audit.Fact_TableGrowth&#xA;),&#xA;LatestDates AS (&#xA;    SELECT&#xA;        id_dim_table,&#xA;        MAX(id_dim_date) AS max_date&#xA;    FROM CTE&#xA;    GROUP BY id_dim_table&#xA;)&#xA;INSERT INTO [audit].[Fact_TableGrowth_Change] (id_dim_table, id_dim_date, number_of_rows, growth_from_previous_day)&#xA;SELECT&#xA;    C.id_dim_table,&#xA;    C.id_dim_date,&#xA;    C.number_of_rows,&#xA;    C.number_of_rows - C.number_of_rows_previous AS growth_from_previous_day&#xA;FROM CTE C&#xA;INNER JOIN LatestDates LD ON C.id_dim_table = LD.id_dim_table AND C.id_dim_date = LD.max_date&#xA;ORDER BY C.id_dim_table;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Load Fact\Incremental Load\Insert in Summarize Table"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{DEFFD9C7-55CE-467A-909A-69B646211F64}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Insert in Summarize Table"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+                  SQLTask:SqlStatementSource="DECLARE @last_date int;&#xA;&#xA;SELECT @last_date = MAX(id_dim_date) FROM audit.Fact_TableGrowth_Change;&#xA;&#xA;INSERT INTO audit.Fact_TableGrowth_Summarize (id_dim_date, number_of_tables_up,number_of_tables_without_changes, number_of_tables_down,  total_new_rows, total_deleted_rows)&#xA;SELECT&#xA;    @last_date AS id_dim_date,&#xA;    SUM(CASE WHEN [growth_from_previous_day] &gt; 0 THEN 1 ELSE 0 END) AS tables_up,&#xA;    SUM(CASE WHEN [growth_from_previous_day] = 0 THEN 1 ELSE 0 END) AS tables_without_changes,&#xA;    SUM(CASE WHEN [growth_from_previous_day] &lt; 0 THEN 1 ELSE 0 END) AS tables_down,&#xA;    SUM(CASE WHEN [growth_from_previous_day] &gt; 0 THEN [growth_from_previous_day] ELSE 0 END) AS new_rows,&#xA;    ABS(SUM(CASE WHEN [growth_from_previous_day] &lt; 0 THEN [growth_from_previous_day] ELSE 0 END)) AS deleted_rows&#xA;FROM [audit].[Fact_TableGrowth_Change];&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Load Fact\Incremental Load\Update MaxDate"
+              DTS:CreationName="Microsoft.ExecuteSQLTask"
+              DTS:Description="Execute SQL Task"
+              DTS:DTSID="{8AC97308-E7F8-4422-B438-0BEC9326DA8A}"
+              DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Update MaxDate"
+              DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+              DTS:ThreadHint="0">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <SQLTask:SqlTaskData
+                  SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+                  SQLTask:SqlStatementSource="DECLARE @maxdate DATETIME;&#xA;DECLARE @key INT;&#xA;DECLARE @facttablename VARCHAR(100);&#xA;&#xA;SET @maxdate = ?;&#xA;SET @key = ?;&#xA;SET @facttablename = ?;&#xA;&#xA;&#xA;UPDATE [audit].[FactTable]&#xA;SET [TableMaxDateTime] = @maxdate &#xA;WHERE [FactTable]=@facttablename&#xA;&#xA;UPDATE [audit].[DimAudit]&#xA;SET [TableMaxDateTime] = @maxdate&#xA;WHERE AuditKey = @key" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="0"
+                    SQLTask:DtsVariableName="User::TableMaxDateTime"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="7"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="1"
+                    SQLTask:DtsVariableName="User::AuditKey"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="3"
+                    SQLTask:ParameterSize="-1" />
+                  <SQLTask:ParameterBinding
+                    SQLTask:ParameterName="2"
+                    SQLTask:DtsVariableName="User::TableName"
+                    SQLTask:ParameterDirection="Input"
+                    SQLTask:DataType="129"
+                    SQLTask:ParameterSize="-1" />
+                </SQLTask:SqlTaskData>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{7EE9FDA2-352D-46D9-86D3-62C88EDB40C3}"
+              DTS:From="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Load Fact\Incremental Load\Get new DateMax" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 1]"
+              DTS:CreationName=""
+              DTS:DTSID="{CF8F57C3-C141-49D9-A930-ACEE130D0D09}"
+              DTS:From="Package\Load Fact\Incremental Load\Insert in Aggregate Table"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 1"
+              DTS:To="Package\Load Fact\Incremental Load\Insert in Summarize Table" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 2]"
+              DTS:CreationName=""
+              DTS:DTSID="{0E221707-87A8-48A9-83DC-D47CF5197E82}"
+              DTS:From="Package\Load Fact\Incremental Load\Get Last FactTable Insert"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 2"
+              DTS:To="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 3]"
+              DTS:CreationName=""
+              DTS:DTSID="{7E71E44C-313A-4D6F-896C-5145F084E281}"
+              DTS:From="Package\Load Fact\Incremental Load\Get new DateMax"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 3"
+              DTS:To="Package\Load Fact\Incremental Load\Update MaxDate" />
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 4]"
+              DTS:CreationName=""
+              DTS:DTSID="{DE82F0E2-4932-4F19-8033-ED9A54883801}"
+              DTS:From="Package\Load Fact\Incremental Load\Update MaxDate"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint 4"
+              DTS:To="Package\Load Fact\Incremental Load\Insert in Aggregate Table" />
+          </DTS:PrecedenceConstraints>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact\Incremental Load?"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{8D49900A-50BB-4B3C-B097-8274A704E34A}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Incremental Load?"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::Incremental]" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Fact.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{46D49ED8-564A-401C-B114-D3B9FCA3440A}"
+          DTS:EvalOp="1"
+          DTS:Expression="@[User::Incremental] == True"
+          DTS:From="Package\Load Fact\Incremental Load?"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load Fact\Incremental Load" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Fact.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{FAC03CB4-DD50-4F3E-94F0-2557C91E169F}"
+          DTS:EvalOp="1"
+          DTS:Expression="@[User::Incremental]== False"
+          DTS:From="Package\Load Fact\Incremental Load?"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Load Fact\Full or FirstTime" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Fact.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{FBFC2C27-332B-4211-B18A-B7DF0FAEC6EA}"
+          DTS:From="Package\Load Fact\Count Final Rows in Fact Table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Load Fact\Calculate Inserted Rows" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Fact.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{9C231701-A963-4194-A529-CB37387B6BDF}"
+          DTS:From="Package\Load Fact\Incremental Load"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Load Fact\Count Final Rows in Fact Table" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Fact.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{465AC397-9A7A-4E98-AFB2-C87BADAF4507}"
+          DTS:From="Package\Load Fact\Count initial Rows in Fact Table"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\Load Fact\Incremental Load?" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Run package?"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E1C55EB6-4F0C-4E3D-B8EC-9D5FCB595A3A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Run package?"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+          SQLTask:SqlStatementSource="SELECT RunStatus FROM &#xA;RunPackages where &#xA;TableName = ? and DatabaseName = ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::RunPackage" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{F5A68CD9-94AF-4FC0-B1FB-0573E82A4914}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{7D2BD7E5-08F7-411F-8DC5-01C38354362B}"
+          SQLTask:SqlStatementSource="spAuditEnd ?,?,?,?,?,?,?,?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::RowCountInitial"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::RowCountExtracts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::RowCountInserts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::RowCountUpdates"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::RowCountFinal"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="User::RowCountErrors"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::AuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="7"
+            SQLTask:DtsVariableName="User::FilteredRowCount"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{5C961673-8AA8-44DE-B51D-514C83C0773A}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::RunPackage]"
+      DTS:From="Package\Run package?"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Insert row into audit table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{76C3BEC5-C66C-4CB9-9B8A-914FB909513E}"
+      DTS:From="Package\Insert row into audit table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Fact" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{44FC4149-AE6F-4346-9EB9-4483A26AFF47}"
+      DTS:From="Package\Load Fact"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Update row into audit table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Insert row into audit table"
+          TopLeft="38,399" />
+        <NodeLayout
+          Size="198,42"
+          Id="Package\Load Fact\Calculate Inserted Rows"
+          TopLeft="78,760" />
+        <NodeLayout
+          Size="232,42"
+          Id="Package\Load Fact\Count Final Rows in Fact Table"
+          TopLeft="56,688" />
+        <NodeLayout
+          Size="233,42"
+          Id="Package\Load Fact\Count initial Rows in Fact Table"
+          TopLeft="197,12" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="265,447"
+          Size="265,490"
+          Id="Package\Load Fact\Full or FirstTime"
+          TopLeft="348,163" />
+        <NodeLayout
+          Size="203,42"
+          Id="Package\Load Fact\Incremental Load\Get Last FactTable Insert"
+          TopLeft="46,18" />
+        <NodeLayout
+          Size="271,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact"
+          TopLeft="13.5,89" />
+        <NodeLayout
+          Size="167,42"
+          Id="Package\Load Fact\Incremental Load\Get new DateMax"
+          TopLeft="64,155" />
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Load Fact\Incremental Load\Insert in Aggregate Table"
+          TopLeft="46,286" />
+        <NodeLayout
+          Size="207,42"
+          Id="Package\Load Fact\Incremental Load\Insert in Summarize Table"
+          TopLeft="43,351" />
+        <NodeLayout
+          Size="161,42"
+          Id="Package\Load Fact\Incremental Load\Update MaxDate"
+          TopLeft="64,221" />
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint]"
+          TopLeft="148.25,131">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,24"
+              Start="0,0"
+              End="0,16.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="146.75,328">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,23"
+              Start="0,0"
+              End="0,15.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="148.25,60">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,29"
+              Start="0,0"
+              End="0,21.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="146,197">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,24"
+              Start="0,0"
+              End="0,16.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="145.75,263">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,23"
+              Start="0,0"
+              End="0,15.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="300,448"
+          Size="300,491"
+          Id="Package\Load Fact\Incremental Load"
+          TopLeft="27,163" />
+        <NodeLayout
+          Size="170,42"
+          Id="Package\Load Fact\Incremental Load?"
+          TopLeft="227,83" />
+        <EdgeLayout
+          Id="Package\Load Fact.PrecedenceConstraints[Constraint]"
+          TopLeft="285,125">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-108,38"
+              Start="0,0"
+              End="-108,30.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,11.4125874125874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,11.4125874125874"
+                    Point2="0,15.4125874125874"
+                    Point3="-4,15.4125874125874" />
+                  <mssgle:LineSegment
+                    End="-104,15.4125874125874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-104,15.4125874125874"
+                    Point2="-108,15.4125874125874"
+                    Point3="-108,19.4125874125874" />
+                  <mssgle:LineSegment
+                    End="-108,30.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-62,20.4125874125874,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.PrecedenceConstraints[Constraint 1]"
+          TopLeft="339,125">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="141.5,38"
+              Start="0,0"
+              End="141.5,30.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,11.4125874125874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,11.4125874125874"
+                    Point2="0,15.4125874125874"
+                    Point3="4,15.4125874125874" />
+                  <mssgle:LineSegment
+                    End="137.5,15.4125874125874" />
+                  <mssgle:CubicBezierSegment
+                    Point1="137.5,15.4125874125874"
+                    Point2="141.5,15.4125874125874"
+                    Point3="141.5,19.4125874125874" />
+                  <mssgle:LineSegment
+                    End="141.5,30.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="62.75,20.4125874125874,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.PrecedenceConstraints[Constraint 2]"
+          TopLeft="174.5,730">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,30"
+              Start="0,0"
+              End="0,22.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.PrecedenceConstraints[Constraint 3]"
+          TopLeft="174.5,654">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34"
+              Start="0,0"
+              End="0,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact.PrecedenceConstraints[Constraint 5]"
+          TopLeft="312.75,54">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,29"
+              Start="0,0"
+              End="0,21.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="647,869"
+          Size="647,912"
+          Id="Package\Load Fact"
+          TopLeft="281,35" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Run package?"
+          TopLeft="67,207" />
+        <NodeLayout
+          Size="210,42"
+          Id="Package\Update row into audit table"
+          TopLeft="970,406" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="140.5,249">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,150"
+              Start="0,0"
+              End="0,142.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,142.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,63.25,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="240,420">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="41,71"
+              Start="0,0"
+              End="33.5,71">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="16.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="16.5,0"
+                    Point2="20.5,0"
+                    Point3="20.5,4" />
+                  <mssgle:LineSegment
+                    End="20.5,67" />
+                  <mssgle:CubicBezierSegment
+                    Point1="20.5,67"
+                    Point2="20.5,71"
+                    Point3="24.5,71" />
+                  <mssgle:LineSegment
+                    End="33.5,71" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="928,491">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="42,-64"
+              Start="0,0"
+              End="34.5,-64">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="17,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="17,0"
+                    Point2="21,0"
+                    Point3="21,-4" />
+                  <mssgle:LineSegment
+                    End="21,-60" />
+                  <mssgle:CubicBezierSegment
+                    Point1="21,-60"
+                    Point2="21,-64"
+                    Point3="25,-64" />
+                  <mssgle:LineSegment
+                    End="34.5,-64" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="169,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Get only new rows"
+          TopLeft="48,200" />
+        <NodeLayout
+          Size="158,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update"
+          TopLeft="376,413" />
+        <NodeLayout
+          Size="173,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Filtered Row Count"
+          TopLeft="51,345" />
+        <NodeLayout
+          Size="130,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Sort Table"
+          TopLeft="67,279" />
+        <NodeLayout
+          Size="183,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Extracted Row Count"
+          TopLeft="181,65" />
+        <NodeLayout
+          Size="252,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows"
+          TopLeft="11,412" />
+        <NodeLayout
+          Size="205,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Update Fact TableGrowth"
+          TopLeft="863,523" />
+        <NodeLayout
+          Size="173,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Row_count change"
+          TopLeft="558,517" />
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table"
+          TopLeft="80,10" />
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Discard null rows"
+          TopLeft="55,122" />
+        <NodeLayout
+          Size="153,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Count Updated"
+          TopLeft="893,444" />
+        <NodeLayout
+          Size="197,42"
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert Fact TableGrowth"
+          TopLeft="547,318" />
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[new_rows]"
+          TopLeft="132.25,242">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,37"
+              Start="0,0"
+              End="0,29.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-22.88919921875,10.21484375,45.7783984375,9.0703125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Lookup No Match Output]"
+          TopLeft="455,413">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="190.5,-53"
+              Start="0,0"
+              End="190.5,-45.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,-22.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,-22.5"
+                    Point2="0,-26.5"
+                    Point3="4,-26.5" />
+                  <mssgle:LineSegment
+                    End="186.5,-26.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="186.5,-26.5"
+                    Point2="190.5,-26.5"
+                    Point3="190.5,-30.5" />
+                  <mssgle:LineSegment
+                    End="190.5,-45.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="39.44361328125,-21.5,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Lookup Match Output1]"
+          TopLeft="263,433.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="113,0"
+              Start="0,0"
+              End="105.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="105.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="4.55861328125,5,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Lookup Match Output]"
+          TopLeft="455,455">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="189.5,62"
+              Start="0,0"
+              End="189.5,54.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27"
+                    Point2="0,31"
+                    Point3="4,31" />
+                  <mssgle:LineSegment
+                    End="185.5,31" />
+                  <mssgle:CubicBezierSegment
+                    Point1="185.5,31"
+                    Point2="189.5,31"
+                    Point3="189.5,35" />
+                  <mssgle:LineSegment
+                    End="189.5,54.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="46.55861328125,36,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[change_number_rows]"
+          TopLeft="731,541">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="132,0"
+              Start="0,0"
+              End="124.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="124.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="12.6928125,5,99.114375,11.6630859375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Sort Output]"
+          TopLeft="134.75,321">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,24"
+              Start="0,0"
+              End="0,16.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Row Count Output 11]"
+          TopLeft="181,86">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-44.5,36"
+              Start="0,0"
+              End="-44.5,28.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-40.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-40.5,0"
+                    Point2="-44.5,0"
+                    Point3="-44.5,4" />
+                  <mssgle:LineSegment
+                    End="-44.5,28.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[Row Count Output 1]"
+          TopLeft="137.25,387">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,25"
+              Start="0,0"
+              End="0,17.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[OLE DB Source Output]"
+          TopLeft="256,31">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="16.5,34"
+              Start="0,0"
+              End="16.5,26.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="12.5,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="12.5,0"
+                    Point2="16.5,0"
+                    Point3="16.5,4" />
+                  <mssgle:LineSegment
+                    End="16.5,26.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[OLE DB Command Output]"
+          TopLeft="967.5,523">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,-37"
+              Start="0,0"
+              End="0,-29.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,-29.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact.Paths[not_null_keys]"
+          TopLeft="134.5,164">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36"
+              Start="0,0"
+              End="0,28.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-30.91919921875,8.4453125,61.8383984375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Read Staging Table">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Insert or Update">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[audit].[Fact_TableGrowth]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact\Incremental Load\Get new data from Staging &amp; Load Fact\Lookup Dim_Table with active rows">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:string">true</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[audit].[Dim_Table]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:string">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

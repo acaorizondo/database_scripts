@@ -1,0 +1,2352 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/25/2023 11:39:31 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="NB085"
+  DTS:CreatorName="APOLLOSHIPS\aorizondo"
+  DTS:DTSID="{FE9E3514-51D1-44BE-8346-A86BA831F9FD}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="DWH Transform_Load DimLocationEvent"
+  DTS:PackageType="5"
+  DTS:VersionBuild="158"
+  DTS:VersionGUID="{6008290D-4C7D-4B20-A747-9360625CC5AF}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DWH_Test]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+      DTS:ObjectName="localhost.DWH_Test">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::DWHConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DWH_Test;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-ETL-DWH_Test-{2211D4FD-2A8E-45B0-9358-112A3FF06347}localhost.DWH_Test;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.Staging]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{3E224627-8530-4A26-89B7-1761F408EC09}"
+      DTS:ObjectName="localhost.Staging">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::StagingConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=Staging;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{FD6C36E4-B51E-4F85-83CB-1C790B0F1F5D}localhost.Staging;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="Audit key passed from calling package"
+      DTS:DTSID="{EA626B14-E433-4D24-B27D-7CA279B7C645}"
+      DTS:ObjectName="ParentAuditKey">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">-1</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CE2DD8BA-DA45-4A90-8069-98B22ACC963E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="AuditKey">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9DD2416B-65C2-47C2-B353-9AD342DF013F}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DatabaseName">
+      <DTS:VariableValue
+        DTS:DataType="8">DWH_Test</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{99E34FE4-90E6-4515-A9BA-A4F44A28A779}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilteredRowCount">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{754E4B75-6D8A-4BAA-A460-332BB2DBBC35}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountErrors">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CE7EA287-834D-47A6-BE4A-E15AE66174C6}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountExtracts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{51817B11-99D7-49B0-9161-84600C47536E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountFinal">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B65AE059-80BB-441F-9A6D-F3861E3BFAB3}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInitial">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A4827F28-55F0-4171-AAE1-B863875C6F86}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInserts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C4D772CF-03B9-4AD4-B49C-74E5E86F2EBA}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountUpdates">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6E40E2C4-F912-45B4-825A-96FCCFDF2500}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RunPackage">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C0450527-6B29-4C2F-9102-84EE05AA02C3}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B8FE39E4-2ECC-4353-9F49-618EE7FE8397}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQueryWhere">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CBA375EB-950E-4A6A-AC3A-D8DF508A12E2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableMaxDateTime">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{750CC77D-3F18-4BD5-840E-7E755D12B75F}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableName">
+      <DTS:VariableValue
+        DTS:DataType="8">DimLocations</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{69EA5993-1251-4A54-BF47-C8F966E349BC}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="UpdateDimensionType">
+      <DTS:VariableValue
+        DTS:DataType="2">1</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Insert row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{2CF21DEF-3508-44FB-8BAF-22F591A27794}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+          SQLTask:SqlStatementSource="spAuditBegin  ?,?,?,?,?,?,?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="AuditKey"
+            SQLTask:DtsVariableName="User::AuditKey" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::PackageID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="System::VersionGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="System::ExecutionInstanceGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="$Package::ParentAuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load Dimension (Locations)"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{D67283F2-8971-4304-BD10-37C8DA21C575}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Dimension (Locations)">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Locations)\Count Final Rows"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{B2DA3E46-6ABB-48D7-B1D3-6D97084477CB}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count Final Rows"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountFinal from DimLocations"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountFinal"
+                SQLTask:DtsVariableName="User::RowCountFinal" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Locations)\Count Final Rows 1"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{6428CE1F-E8F1-48A6-8143-CE37607DFB01}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count Final Rows 1"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountFinal from DimLocations"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountFinal"
+                SQLTask:DtsVariableName="User::RowCountFinal" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Locations)\Count initial Row Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{1D3F8ACD-F510-404A-B588-84B55A18AF12}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count initial Row Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountInitial from DimLocations"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountInitial"
+                SQLTask:DtsVariableName="User::RowCountInitial" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Locations)\Load DimLocations"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{5DEAC5D4-B910-4943-B9D3-CD303066ED91}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimLocations"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations"
+                  componentClassID="Microsoft.OLEDBCommand"
+                  contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+                  description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+                  name="Full Update DimLocations"
+                  usesDispositions="true"
+                  version="2">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">UPDATE DimLocations
+   SET 
+      LocationCode = ?
+      ,LocationName = ?
+      ,Flags = ?
+      ,ProductDepartmentCode = ?
+      ,ProductDepartmentName = ?
+ WHERE LocationKey = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input]"
+                      errorOrTruncationOperation="Command Execution"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Command Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].Columns[LocationCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="LocationCode"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].Columns[LocationName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="LocationName"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].Columns[Flags]"
+                          cachedDataType="i4"
+                          cachedName="Flags"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[Flags]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].Columns[ProductDepartmentCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="2"
+                          cachedName="ProductDepartmentCode"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_3]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].Columns[ProductDepartmentName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="ProductDepartmentName"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_4]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].Columns[LocationKey]"
+                          cachedDataType="guid"
+                          cachedName="LocationKey"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_5]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationKey]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="Param_0">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="Param_1">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                          dataType="i4"
+                          name="Param_2">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">81</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_3]"
+                          codePage="1252"
+                          dataType="str"
+                          length="2"
+                          name="Param_3">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_4]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="Param_4">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input].ExternalColumns[Param_5]"
+                          dataType="guid"
+                          name="Param_5">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Output]"
+                      exclusionGroup="1"
+                      name="OLE DB Command Output"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Command Error Output"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="Insert in DimLocations"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[dbo].[DimLocations]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].Columns[LocationKey]"
+                          cachedDataType="guid"
+                          cachedName="LocationKey"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[LocationKey]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationKey]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].Columns[LocationCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="LocationCode"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[LocationCode]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].Columns[LocationName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="LocationName"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[LocationName]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].Columns[Flags]"
+                          cachedDataType="i4"
+                          cachedName="Flags"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[Flags]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[Flags]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].Columns[ProductDepartmentCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="2"
+                          cachedName="ProductDepartmentCode"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[ProductDepartmentCode]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].Columns[ProductDepartmentName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="ProductDepartmentName"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[ProductDepartmentName]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentName]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[IdDimLocations]"
+                          dataType="i4"
+                          name="IdDimLocations" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[LocationKey]"
+                          dataType="guid"
+                          name="LocationKey" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[LocationCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="LocationCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[LocationName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="LocationName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[Flags]"
+                          dataType="i4"
+                          name="Flags" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[ProductDepartmentCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="2"
+                          name="ProductDepartmentCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input].ExternalColumns[ProductDepartmentName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="ProductDepartmentName" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="Lookup"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[DimLocations]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[DimLocations]) [refTable]
+where [refTable].[LocationKey] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">1</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="IdDimLocations" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="LocationKey" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="LocationCode" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="LocationName" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Flags" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="ProductDepartmentCode" dataType="DT_STR" length="2" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="ProductDepartmentName" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationKey]};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Inputs[Lookup Input].Columns[LocationKey]"
+                          cachedDataType="guid"
+                          cachedName="LocationKey"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationKey]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">LocationKey</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="Read Locations Staging"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[ERP].[ICS_Locations]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.Staging]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.Staging]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationKey]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[LocationKey]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationKey]"
+                          name="LocationKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[LocationCode]"
+                          length="50"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationCode]"
+                          name="LocationCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[LocationName]"
+                          length="50"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[LocationName]"
+                          name="LocationName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[Flags]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[Flags]"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[Flags]"
+                          name="Flags"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[ProductDepartmentCode]"
+                          length="2"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentCode]"
+                          name="ProductDepartmentCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[ProductDepartmentName]"
+                          length="50"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].Columns[ProductDepartmentName]"
+                          name="ProductDepartmentName"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[LocationKey]"
+                          dataType="guid"
+                          name="LocationKey" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[LocationCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="LocationCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[LocationName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="LocationName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[Flags]"
+                          dataType="i4"
+                          name="Flags" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[ProductDepartmentCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="2"
+                          name="ProductDepartmentCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output].ExternalColumns[ProductDepartmentName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="ProductDepartmentName" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[LocationKey]"
+                          dataType="guid"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[LocationKey]"
+                          name="LocationKey" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[LocationCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[LocationCode]"
+                          name="LocationCode" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[LocationName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[LocationName]"
+                          name="LocationName" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[Flags]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[Flags]"
+                          name="Flags" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ProductDepartmentCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="2"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ProductDepartmentCode]"
+                          name="ProductDepartmentCode" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ProductDepartmentName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ProductDepartmentName]"
+                          name="ProductDepartmentName" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count Extracted">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountExtracts</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count Inserted">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountInserts</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Updated"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count Updated">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountUpdates</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Updated.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Updated.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Updated.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load Dimension (Locations)\Load DimLocations.Paths[Lookup Match Output]"
+                  endId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Inputs[OLE DB Command Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Dimension (Locations)\Load DimLocations.Paths[Lookup No Match Output]"
+                  endId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted.Inputs[Row Count Input 1]"
+                  name="Lookup No Match Output"
+                  startId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Outputs[Lookup No Match Output]" />
+                <path
+                  refId="Package\Load Dimension (Locations)\Load DimLocations.Paths[OLE DB Command Output]"
+                  endId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Updated.Inputs[Row Count Input 1]"
+                  name="OLE DB Command Output"
+                  startId="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations.Outputs[OLE DB Command Output]" />
+                <path
+                  refId="Package\Load Dimension (Locations)\Load DimLocations.Paths[OLE DB Source Output]"
+                  endId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Load Dimension (Locations)\Load DimLocations.Paths[Row Count Output 1]"
+                  endId="Package\Load Dimension (Locations)\Load DimLocations\Lookup.Inputs[Lookup Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted.Outputs[Row Count Output 1]" />
+                <path
+                  refId="Package\Load Dimension (Locations)\Load DimLocations.Paths[Row Count Output 11]"
+                  endId="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Locations)\Load SCD DimLocations"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:Disabled="True"
+          DTS:DTSID="{299D81E7-4C60-4C55-BBD8-6EBA90D8D0FD}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load SCD DimLocations"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Locations)\Update Dimension Type 2"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{D850EB10-95C6-4D56-AEEB-4B8CAFA90A86}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update Dimension Type 2"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::UpdateDimensionType]==2" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{FEF41E3A-2AE6-4E3B-8241-B3D57432441F}"
+          DTS:From="Package\Load Dimension (Locations)\Count initial Row Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load Dimension (Locations)\Update Dimension Type 2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{F93C0C44-3A26-47BA-A026-DAA2745E4871}"
+          DTS:EvalOp="1"
+          DTS:Expression="@[User::UpdateDimensionType]==1"
+          DTS:From="Package\Load Dimension (Locations)\Update Dimension Type 2"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Load Dimension (Locations)\Load DimLocations" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{707F034E-66D7-4FDF-8760-78CBAEAA6B4B}"
+          DTS:EvalOp="1"
+          DTS:Expression="@[User::UpdateDimensionType]==2"
+          DTS:From="Package\Load Dimension (Locations)\Update Dimension Type 2"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Load Dimension (Locations)\Load SCD DimLocations" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{8B2EE2FB-7F26-4584-885A-D5F4C51C3577}"
+          DTS:From="Package\Load Dimension (Locations)\Load SCD DimLocations"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Load Dimension (Locations)\Count Final Rows" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{936655C3-4033-40A6-B816-2D6F887AD43C}"
+          DTS:From="Package\Load Dimension (Locations)\Load DimLocations"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\Load Dimension (Locations)\Count Final Rows 1" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Run package?"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{AF31C7B4-D598-4610-9034-D51FC36A7270}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Run package?"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+          SQLTask:SqlStatementSource="SELECT RunStatus FROM &#xA;RunPackages where &#xA;TableName = ? and DatabaseName = ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::RunPackage" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{EFDBA831-262E-4B42-B8CB-A36C557FC5F9}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{BC5B32AA-C135-49E5-96E1-4A5B9F95483E}"
+          SQLTask:SqlStatementSource="spAuditEnd ?,?,?,?,?,?,?,?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::RowCountInitial"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::RowCountExtracts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::RowCountInserts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::RowCountUpdates"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::RowCountFinal"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="User::RowCountErrors"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::AuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="7"
+            SQLTask:DtsVariableName="User::FilteredRowCount"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{6824B415-4674-4E1B-9A62-FB7807E76580}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::RunPackage]"
+      DTS:From="Package\Run package?"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Insert row into audit table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{8B3A6368-029F-4FD8-8D36-3C7DE9238456}"
+      DTS:From="Package\Insert row into audit table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Dimension (Locations)" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{8C23C233-0FC1-44B9-9B57-40C3D8057655}"
+      DTS:From="Package\Load Dimension (Locations)"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Update row into audit table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Insert row into audit table"
+          TopLeft="79,259" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Load Dimension (Locations)\Count Final Rows"
+          TopLeft="238,279" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Load Dimension (Locations)\Count Final Rows 1"
+          TopLeft="27,280" />
+        <NodeLayout
+          Size="194,42"
+          Id="Package\Load Dimension (Locations)\Count initial Row Count"
+          TopLeft="125,17" />
+        <NodeLayout
+          Size="173,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations"
+          TopLeft="29,180" />
+        <NodeLayout
+          Size="199,42"
+          Id="Package\Load Dimension (Locations)\Load SCD DimLocations"
+          TopLeft="222,181" />
+        <NodeLayout
+          Size="206,42"
+          Id="Package\Load Dimension (Locations)\Update Dimension Type 2"
+          TopLeft="112,87" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint]"
+          TopLeft="218.5,59">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28"
+              Start="0,0"
+              End="0,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 1]"
+          TopLeft="182,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-66.5,51"
+              Start="0,0"
+              End="-66.5,43.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.635838150289" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.635838150289"
+                    Point2="0,20.635838150289"
+                    Point3="-4,20.635838150289" />
+                  <mssgle:LineSegment
+                    End="-62.5,20.635838150289" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-62.5,20.635838150289"
+                    Point2="-66.5,20.635838150289"
+                    Point3="-66.5,24.635838150289" />
+                  <mssgle:LineSegment
+                    End="-66.5,43.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-41.25,25.635838150289,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 2]"
+          TopLeft="248,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="73.5,52"
+              Start="0,0"
+              End="73.5,44.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.0404624277457" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,17.0404624277457"
+                    Point2="0,21.0404624277457"
+                    Point3="4,21.0404624277457" />
+                  <mssgle:LineSegment
+                    End="69.5,21.0404624277457" />
+                  <mssgle:CubicBezierSegment
+                    Point1="69.5,21.0404624277457"
+                    Point2="73.5,21.0404624277457"
+                    Point3="73.5,25.0404624277457" />
+                  <mssgle:LineSegment
+                    End="73.5,44.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="28.75,26.0404624277457,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 3]"
+          TopLeft="321.25,223">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56"
+              Start="0,0"
+              End="0,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations).PrecedenceConstraints[Constraint 4]"
+          TopLeft="112.75,222">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58"
+              Start="0,0"
+              End="0,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="450,380"
+          Size="450,423"
+          Id="Package\Load Dimension (Locations)"
+          TopLeft="340,69" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Run package?"
+          TopLeft="101,87" />
+        <NodeLayout
+          Size="210,42"
+          Id="Package\Update row into audit table"
+          TopLeft="846,259" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="178,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,130"
+              Start="0,0"
+              End="0,122.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,122.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,53.25,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="281,280.25">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="59,0"
+              Start="0,0"
+              End="51.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="51.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="790,280.25">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="56,0"
+              Start="0,0"
+              End="48.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="48.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Dimension (Locations)\Load DimLocations">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="178,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Row Count Updated"
+          TopLeft="616,374" />
+        <NodeLayout
+          Size="196,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging"
+          TopLeft="44,44" />
+        <NodeLayout
+          Size="183,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Row Count Extracted"
+          TopLeft="312,49" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations)\Load DimLocations.Paths[OLE DB Source Output]"
+          TopLeft="240,67.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="72,0"
+              Start="0,0"
+              End="64.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="64.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="115,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Lookup"
+          TopLeft="345,132" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations)\Load DimLocations.Paths[Row Count Output 1]"
+          TopLeft="403,91">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41"
+              Start="0,0"
+              End="0,33.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="176,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Row Count Inserted"
+          TopLeft="181,243" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations)\Load DimLocations.Paths[Lookup No Match Output]"
+          TopLeft="402.5,174">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-133.5,69"
+              Start="0,0"
+              End="-133.5,61.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,30.5"
+                    Point2="0,34.5"
+                    Point3="-4,34.5" />
+                  <mssgle:LineSegment
+                    End="-129.5,34.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-129.5,34.5"
+                    Point2="-133.5,34.5"
+                    Point3="-133.5,38.5" />
+                  <mssgle:LineSegment
+                    End="-133.5,61.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-122.55638671875,39.5,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="188,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations"
+          TopLeft="173,373" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations)\Load DimLocations.Paths[Row Count Output 11]"
+          TopLeft="268,285">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,88"
+              Start="0,0"
+              End="0,80.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,80.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="205,42"
+          Id="Package\Load Dimension (Locations)\Load DimLocations\Full Update DimLocations"
+          TopLeft="608,255" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations)\Load DimLocations.Paths[Lookup Match Output]"
+          TopLeft="420.333333333333,174">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="290.166666666667,81"
+              Start="0,0"
+              End="290.166666666667,73.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.0668953687822" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,29.0668953687822"
+                    Point2="0,33.0668953687822"
+                    Point3="4,33.0668953687822" />
+                  <mssgle:LineSegment
+                    End="286.166666666667,33.0668953687822" />
+                  <mssgle:CubicBezierSegment
+                    Point1="286.166666666667,33.0668953687822"
+                    Point2="290.166666666667,33.0668953687822"
+                    Point3="290.166666666667,37.0668953687822" />
+                  <mssgle:LineSegment
+                    End="290.166666666667,73.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="96.8919466145833,38.0668953687822,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Locations)\Load DimLocations.Paths[OLE DB Command Output]"
+          TopLeft="707.75,297">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,77"
+              Start="0,0"
+              End="0,69.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,69.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <TaskHost
+    design-time-name="Package\Load Dimension (Locations)\Load SCD DimLocations">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="152,42"
+          Id="107"
+          TopLeft="156,198.5" />
+        <NodeLayout
+          Size="215,42"
+          Id="217"
+          TopLeft="0.500000000000114,363.5" />
+        <NodeLayout
+          Size="178,42"
+          Id="103"
+          TopLeft="335,432.5" />
+        <NodeLayout
+          Size="141,42"
+          Id="139"
+          TopLeft="34.0000000000001,298.5" />
+        <NodeLayout
+          Size="176,42"
+          Id="99"
+          TopLeft="354,55.5" />
+        <NodeLayout
+          Size="157,42"
+          Id="57"
+          TopLeft="166.5,5.5" />
+        <NodeLayout
+          Size="218,42"
+          Id="15"
+          TopLeft="740.5,428.5" />
+        <NodeLayout
+          Size="198,42"
+          Id="198"
+          TopLeft="302,307.5" />
+        <NodeLayout
+          Size="173,42"
+          Id="11"
+          TopLeft="358.5,149.5" />
+        <NodeLayout
+          Size="153,43"
+          Id="45"
+          TopLeft="163.5,104.5" />
+        <NodeLayout
+          Size="132,42"
+          Id="2"
+          TopLeft="553.5,428.5" />
+        <NodeLayout
+          Size="123,42"
+          Id="148"
+          TopLeft="158.5,429.5" />
+        <EdgeLayout
+          Id="247"
+          TopLeft="281.5,452">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="53.5,0"
+              Start="0,0"
+              End="46,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="46,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="246"
+          TopLeft="513,451.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="40.5,0"
+              Start="0,0"
+              End="33,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="33,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="245"
+          TopLeft="358.5,176.166666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-50.5,43.3333333333333"
+              Start="0,0"
+              End="-43,43.3333333333333">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-17.3119266055046,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-17.3119266055046,0"
+                    Point2="-21.3119266055046,0"
+                    Point3="-21.3119266055046,4" />
+                  <mssgle:LineSegment
+                    End="-21.3119266055046,39.3333333333333" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-21.3119266055046,39.3333333333333"
+                    Point2="-21.3119266055046,43.3333333333333"
+                    Point3="-25.3119266055046,43.3333333333333" />
+                  <mssgle:LineSegment
+                    End="-43,43.3333333333333" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="244"
+          TopLeft="354,82.1666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-37.5,38"
+              Start="0,0"
+              End="-30,38">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-14.7689777327935,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-14.7689777327935,0"
+                    Point2="-18.7689777327935,0"
+                    Point3="-18.7689777327935,4" />
+                  <mssgle:LineSegment
+                    End="-18.7689777327935,34" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.7689777327935,34"
+                    Point2="-18.7689777327935,38"
+                    Point3="-22.7689777327935,38" />
+                  <mssgle:LineSegment
+                    End="-30,38" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="243"
+          TopLeft="316.5,131.833333333333">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="42,33"
+              Start="0,0"
+              End="34.5,33">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="16.9787449392712,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="16.9787449392712,0"
+                    Point2="20.9787449392712,0"
+                    Point3="20.9787449392712,4" />
+                  <mssgle:LineSegment
+                    End="20.9787449392712,29" />
+                  <mssgle:CubicBezierSegment
+                    Point1="20.9787449392712,29"
+                    Point2="20.9787449392712,33"
+                    Point3="24.9787449392712,33" />
+                  <mssgle:LineSegment
+                    End="34.5,33" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-5.1050050607288,-17.609375,52.1675,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="242"
+          TopLeft="323.5,26.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="30.5000000000001,44.3333333333333"
+              Start="0,0"
+              End="23.0000000000001,44.3333333333333">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="13.6284403669725,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="13.6284403669725,0"
+                    Point2="17.6284403669725,0"
+                    Point3="17.6284403669725,4" />
+                  <mssgle:LineSegment
+                    End="17.6284403669725,40.3333333333333" />
+                  <mssgle:CubicBezierSegment
+                    Point1="17.6284403669725,40.3333333333333"
+                    Point2="17.6284403669725,44.3333333333333"
+                    Point3="21.6284403669725,44.3333333333333" />
+                  <mssgle:LineSegment
+                    End="23.0000000000001,44.3333333333333" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="241"
+          TopLeft="108,405.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="92.8333333333333,24"
+              Start="0,0"
+              End="92.8333333333333,16.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10.215088282504" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10.215088282504"
+                    Point2="0,14.215088282504"
+                    Point3="4,14.215088282504" />
+                  <mssgle:LineSegment
+                    End="88.8333333333333,14.215088282504" />
+                  <mssgle:CubicBezierSegment
+                    Point1="88.8333333333333,14.215088282504"
+                    Point2="92.8333333333333,14.215088282504"
+                    Point3="92.8333333333333,18.215088282504" />
+                  <mssgle:LineSegment
+                    End="92.8333333333333,16.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="240"
+          TopLeft="235.583333333333,240.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,189"
+              Start="0,0"
+              End="0,181.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,181.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-27.09138671875,85.033203125,54.1827734375,11.43359375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="239"
+          TopLeft="196,240.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-91.5,58.0000000000001"
+              Start="0,0"
+              End="-91.5,50.5000000000001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16"
+                    Point2="0,20"
+                    Point3="-4,20" />
+                  <mssgle:LineSegment
+                    End="-87.5,20" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-87.5,20"
+                    Point2="-91.5,20"
+                    Point3="-91.5,24" />
+                  <mssgle:LineSegment
+                    End="-91.5,50.5000000000001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-120.80638671875,25,150.1127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="238"
+          TopLeft="685.5,449.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="55,0"
+              Start="0,0"
+              End="47.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="47.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="237"
+          TopLeft="106.25,340.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,23"
+              Start="0,0"
+              End="0,15.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="236"
+          TopLeft="268,240.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="133,67"
+              Start="0,0"
+              End="133,59.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.1034482758621" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.1034482758621"
+                    Point2="0,23.1034482758621"
+                    Point3="4,23.1034482758621" />
+                  <mssgle:LineSegment
+                    End="129,23.1034482758621" />
+                  <mssgle:CubicBezierSegment
+                    Point1="129,23.1034482758621"
+                    Point2="133,23.1034482758621"
+                    Point3="133,27.1034482758621" />
+                  <mssgle:LineSegment
+                    End="133,59.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-12.03390625,28.1034482758621,157.0678125,11.6630859375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dimension (Locations)\Load DimLocations\Read Locations Staging">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dimension (Locations)\Load DimLocations\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[DimLocations]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dimension (Locations)\Load DimLocations\Insert in DimLocations">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

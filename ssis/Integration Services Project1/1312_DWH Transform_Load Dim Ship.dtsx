@@ -1,0 +1,3027 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/25/2023 11:39:31 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="NB085"
+  DTS:CreatorName="APOLLOSHIPS\aorizondo"
+  DTS:DTSID="{D2B65CF5-F348-4B14-9322-2676B9A0C553}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="16.0.5314.0"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="DWH Transform_Load DimShip"
+  DTS:PackageType="5"
+  DTS:VersionBuild="147"
+  DTS:VersionGUID="{8C0EB575-4479-41A5-869D-DA28444E813D}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.DWH_Test]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+      DTS:ObjectName="localhost.DWH_Test">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::DWHConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=DWH_Test;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-ETL-DWH_Test-{2211D4FD-2A8E-45B0-9358-112A3FF06347}localhost.DWH_Test;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[localhost.Staging]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{E03C60AB-5028-4152-9C46-C06D8DD49CF5}"
+      DTS:ObjectName="localhost.Staging">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::StagingConnection]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=Staging;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Package1-{FD6C36E4-B51E-4F85-83CB-1C790B0F1F5D}localhost.Staging;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="Audit key passed from calling package"
+      DTS:DTSID="{3A845B34-C76E-4F02-A607-52288BEE265C}"
+      DTS:ObjectName="ParentAuditKey">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">-1</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6CAA8215-7BCC-4C3F-BED7-26E5E213FC3E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="AuditKey">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C394CD5B-F426-4DB1-86A1-71A5C6F09CFC}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DatabaseName">
+      <DTS:VariableValue
+        DTS:DataType="8">DWH_Test</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A4A502F1-EB61-4714-B245-478217D5CBDB}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="FilteredRowCount">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{58C6F578-DF31-4391-97AA-8C5E316AF501}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountErrors">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{798AB670-DAD2-4EFB-97DB-C65FEEDA6A5C}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountExtracts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{80B40080-FC34-4C08-86AB-E610826073D3}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountFinal">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2E50005A-4CF1-4D7B-AAFD-FCD363B7F7BC}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInitial">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9DF3D2AF-BF37-4A49-8F2B-214CFC308EFB}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountInserts">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{80835D2D-3A1A-40F3-B803-72058FF915B2}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowCountUpdates">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9D68B908-18EB-4F90-92D2-046D2A7E231F}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RunPackage">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FAB47A59-04A2-433F-B49B-AF195EFA21CA}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQuery">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1A58F3F4-2234-4B78-8E13-6F043D57E478}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SourceQueryWhere">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{EC1535C2-3E40-431D-B21B-8E2A95CE876E}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableMaxDateTime">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{82304B35-4FB0-4D94-8775-7915EEB6895C}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TableName">
+      <DTS:VariableValue
+        DTS:DataType="8">DimShip</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{41384C11-F0B6-48D0-B0BD-D5E624F03E50}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="UpdateDimensionType">
+      <DTS:VariableValue
+        DTS:DataType="2">1</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Insert row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{014C2FDE-0FDC-45A6-BDC3-34204B524990}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Insert row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+          SQLTask:SqlStatementSource="spAuditBegin  ?,?,?,?,?,?,?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="AuditKey"
+            SQLTask:DtsVariableName="User::AuditKey" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="System::PackageID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="System::VersionGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="System::ExecutionInstanceGUID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="72"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="$Package::ParentAuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load Dimension (Ship)"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{86A815D2-DB08-4176-84A5-EA6D4D7A0D79}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load Dimension (Ship)">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Ship)\Count Final Rows"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{38034CD1-FD03-42F4-91B4-84547372E3B8}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count Final Rows"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountFinal from DimShip"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountFinal"
+                SQLTask:DtsVariableName="User::RowCountFinal" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Ship)\Count Final Rows 1"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{c6fa7a2a-f2bb-4645-a134-dbedf0aa4e36}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count Final Rows 1"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountFinal from DimShip"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountFinal"
+                SQLTask:DtsVariableName="User::RowCountFinal" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Ship)\Count initial Row Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{F80FF3C2-A0CC-4C18-AE97-AE5B98BC87A9}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Count initial Row Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+              SQLTask:SqlStatementSource="select count(*) as RowCountInitial from DimShip"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="RowCountInitial"
+                SQLTask:DtsVariableName="User::RowCountInitial" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Ship)\Load DimShip"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{C26D8C6C-D816-47CB-8108-ECEA86159207}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimShip"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Any change?"
+                  componentClassID="Microsoft.ConditionalSplit"
+                  contactInfo="Conditional Split;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Routes data rows to different outputs depending on the content of the data. Use conditions (SSIS expressions) to specify which rows are routed. For example, separate records that need to be cleaned from those that are ready to be loaded or route only a subset of records."
+                  name="Any change?"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input]"
+                      description="Input to the Conditional Split Transformation"
+                      name="Conditional Split Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[ShipName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="ShipName"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[DimShipName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="DimShipName"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[Guests]"
+                          cachedDataType="i2"
+                          cachedName="Guests"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Guests]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[Crew]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="Crew"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Crew]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[DimShipGuests]"
+                          cachedDataType="i2"
+                          cachedName="DimShipGuests"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipGuests]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[DimShipCrew]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="DimShipCrew"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCrew]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[CruiseLineName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CruiseLineName"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input].Columns[DimShipCruiseLineName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="DimShipCruiseLineName"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCruiseLineName]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[change]"
+                      description="Output 1 of the Conditional Split Transformation"
+                      errorOrTruncationOperation="Computation"
+                      errorRowDisposition="FailComponent"
+                      exclusionGroup="1"
+                      name="change"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input]"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Specifies the expression. This expression version uses lineage identifiers instead of column names."
+                          name="Expression">#{Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipName]} != #{Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipName]} || #{Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Guests]} != #{Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipGuests]} || #{Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Crew]} != #{Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCrew]} || #{Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineName]} != #{Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCruiseLineName]}</property>
+                        <property
+                          containsID="true"
+                          dataType="System.String"
+                          description="Specifies the friendly version of the expression. This expression version uses column names."
+                          expressionType="Notify"
+                          name="FriendlyExpression">ShipName != DimShipName || Guests != DimShipGuests || Crew != DimShipCrew || CruiseLineName != DimShipCruiseLineName</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Specifies the position of the condition in the list of conditions that the transformation evaluates. The evaluation order is from the lowest to the highest value."
+                          name="EvaluationOrder">0</property>
+                      </properties>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[Conditional Split Default Output]"
+                      description="Default Output of the Conditional Split Transformation"
+                      exclusionGroup="1"
+                      name="Conditional Split Default Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input]">
+                      <properties>
+                        <property
+                          dataType="System.Boolean"
+                          name="IsDefaultOut">true</property>
+                      </properties>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[Conditional Split Error Output]"
+                      description="Error Output of the Conditional Split Transformation"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Conditional Split Error Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[Conditional Split Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[Conditional Split Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="Insert in DimShip"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[dbo].[DimShip]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CompanyGroupCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="10"
+                          cachedName="CompanyGroupCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupCode]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CompanyGroupName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CompanyGroupName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupName]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[ConcessionCompanyCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="ConcessionCompanyCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyCode]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[ConcessionCompanyName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="ConcessionCompanyName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyName]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CruiseLineCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="CruiseLineCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineCode]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CruiseLineName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CruiseLineName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineName]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[ShipCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="ShipCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ShipCode]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[ShipName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="ShipName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[Guests]"
+                          cachedDataType="i2"
+                          cachedName="Guests"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[Guests]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Guests]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[Crew]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="Crew"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[Crew]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Crew]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CompanyGroupShipKey]"
+                          cachedDataType="guid"
+                          cachedName="CompanyGroupShipKey"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupShipKey]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CompanyGroupKey]"
+                          cachedDataType="guid"
+                          cachedName="CompanyGroupKey"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupKey]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupKey]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].Columns[CruiseLineKey]"
+                          cachedDataType="guid"
+                          cachedName="CruiseLineKey"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineKey]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineKey]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[IdDimShip]"
+                          dataType="i4"
+                          name="IdDimShip" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          name="CompanyGroupCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CompanyGroupName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ConcessionCompanyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ConcessionCompanyName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="CruiseLineCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CruiseLineName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ShipCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ShipCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[ShipName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ShipName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[Guests]"
+                          dataType="i2"
+                          name="Guests" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[Crew]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Crew" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          name="CompanyGroupShipKey" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CompanyGroupKey]"
+                          dataType="guid"
+                          name="CompanyGroupKey" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input].ExternalColumns[CruiseLineKey]"
+                          dataType="guid"
+                          name="CruiseLineKey" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Lookup"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="Lookup"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[DimShip]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[DimShip]) [refTable]
+where [refTable].[CompanyGroupShipKey] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">1</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="IdDimShip" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CompanyGroupCode" dataType="DT_STR" length="10" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="CompanyGroupName" dataType="DT_STR" length="150" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="ConcessionCompanyCode" dataType="DT_STR" length="6" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="ConcessionCompanyName" dataType="DT_STR" length="150" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="CruiseLineCode" dataType="DT_STR" length="6" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="CruiseLineName" dataType="DT_STR" length="150" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="ShipCode" dataType="DT_STR" length="6" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="ShipName" dataType="DT_STR" length="150" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="Guests" dataType="DT_I2" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Crew" dataType="DT_STR" length="150" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="CompanyGroupShipKey" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CompanyGroupKey" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="CruiseLineKey" dataType="DT_GUID" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Inputs[Lookup Input].Columns[CompanyGroupShipKey]"
+                          cachedDataType="guid"
+                          cachedName="CompanyGroupShipKey"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">CompanyGroupShipKey</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Copy Column"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipName]"
+                          name="DimShipName"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">ShipName</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipGuests]"
+                          dataType="i2"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipGuests]"
+                          name="DimShipGuests"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Guests</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCrew]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Copy Column"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCrew]"
+                          name="DimShipCrew"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Crew</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Copy Column"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output].Columns[DimShipCruiseLineName]"
+                          name="DimShipCruiseLineName"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">CruiseLineName</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="Read Staging Ship"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[ERP].[SM_Ship]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.Staging]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.Staging]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupCode]"
+                          length="10"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupCode]"
+                          name="CompanyGroupCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupName]"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupName]"
+                          name="CompanyGroupName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyCode]"
+                          length="6"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]"
+                          name="ConcessionCompanyCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyName]"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]"
+                          name="ConcessionCompanyName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CruiseLineCode]"
+                          length="6"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineCode]"
+                          name="CruiseLineCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CruiseLineName]"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineName]"
+                          name="CruiseLineName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipCode]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ShipCode]"
+                          length="6"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipCode]"
+                          name="ShipCode"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipName]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ShipName]"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipName]"
+                          name="ShipName"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Guests]"
+                          dataType="i2"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[Guests]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Guests]"
+                          name="Guests"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Crew]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[Crew]"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Crew]"
+                          name="Crew"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupShipKey]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]"
+                          name="CompanyGroupShipKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[IsActive]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[IsActive]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[IsActive]"
+                          name="IsActive"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[IsClosed]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[IsClosed]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[IsClosed]"
+                          name="IsClosed"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupKey]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupKey]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupKey]"
+                          name="CompanyGroupKey"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineKey]"
+                          dataType="guid"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CruiseLineKey]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineKey]"
+                          name="CruiseLineKey"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          name="CompanyGroupCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CompanyGroupName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ConcessionCompanyCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ConcessionCompanyName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="CruiseLineCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="CruiseLineName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ShipCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="ShipCode" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[ShipName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="ShipName" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[Guests]"
+                          dataType="i2"
+                          name="Guests" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[Crew]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Crew" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          name="CompanyGroupShipKey" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[IsActive]"
+                          dataType="bool"
+                          name="IsActive" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[IsClosed]"
+                          dataType="bool"
+                          name="IsClosed" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CompanyGroupKey]"
+                          dataType="guid"
+                          name="CompanyGroupKey" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].ExternalColumns[CruiseLineKey]"
+                          dataType="guid"
+                          name="CruiseLineKey" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupCode]"
+                          name="CompanyGroupCode" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupName]"
+                          name="CompanyGroupName" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyCode]"
+                          name="ConcessionCompanyCode" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ConcessionCompanyName]"
+                          name="ConcessionCompanyName" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CruiseLineCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CruiseLineCode]"
+                          name="CruiseLineCode" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CruiseLineName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CruiseLineName]"
+                          name="CruiseLineName" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ShipCode]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ShipCode]"
+                          name="ShipCode" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ShipName]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ShipName]"
+                          name="ShipName" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[Guests]"
+                          dataType="i2"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[Guests]"
+                          name="Guests" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[Crew]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[Crew]"
+                          name="Crew" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupShipKey]"
+                          dataType="guid"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupShipKey]"
+                          name="CompanyGroupShipKey" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[IsActive]"
+                          dataType="bool"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[IsActive]"
+                          name="IsActive" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[IsClosed]"
+                          dataType="bool"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[IsClosed]"
+                          name="IsClosed" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupKey]"
+                          dataType="guid"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CompanyGroupKey]"
+                          name="CompanyGroupKey" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CruiseLineKey]"
+                          dataType="guid"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[CruiseLineKey]"
+                          name="CruiseLineKey" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Row Count"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountInserts</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Row Count.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Row Count.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Row Count.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count Extracted">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountExtracts</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Row Count Updated"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="Row Count Updated">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowCountUpdates</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Row Count Updated.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Row Count Updated.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Row Count Updated.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip"
+                  componentClassID="Microsoft.OLEDBCommand"
+                  contactInfo="OLE DB Command;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;2"
+                  description="Runs an SQL statement for each row in a data flow. For example, call a 'new employee setup' stored procedure for each row in the 'new employees' table. Note: running an SQL statement for each row of a large data flow may take a long time."
+                  name="Update ShipName in DimShip"
+                  usesDispositions="true"
+                  version="2">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">UPDATE [dbo].[DimShip]
+   SET [CompanyGroupCode] = ?
+      ,[CompanyGroupName] = ?
+      ,[ConcessionCompanyCode] = ?
+      ,[ConcessionCompanyName] = ?
+      ,[CruiseLineCode] = ?
+      ,[CruiseLineName] = ?
+      ,[ShipCode] = ?
+      ,[ShipName] = ?
+      ,[Guests] = ?
+      ,[Crew] = ?
+      ,[CompanyGroupKey] = ?
+      ,[CruiseLineKey] = ?
+ WHERE [CompanyGroupShipKey] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[localhost.DWH_Test]"
+                      connectionManagerRefId="Package.ConnectionManagers[localhost.DWH_Test]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input]"
+                      errorOrTruncationOperation="Command Execution"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Command Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CompanyGroupCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="10"
+                          cachedName="CompanyGroupCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CompanyGroupName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CompanyGroupName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[ConcessionCompanyCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="ConcessionCompanyCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[ConcessionCompanyName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="ConcessionCompanyName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_3]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ConcessionCompanyName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CruiseLineCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="CruiseLineCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_4]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CruiseLineName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="CruiseLineName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_5]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[ShipCode]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="6"
+                          cachedName="ShipCode"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_6]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipCode]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[ShipName]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="ShipName"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_7]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[ShipName]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[Guests]"
+                          cachedDataType="i2"
+                          cachedName="Guests"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_8]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Guests]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[Crew]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="150"
+                          cachedName="Crew"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_9]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[Crew]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CompanyGroupKey]"
+                          cachedDataType="guid"
+                          cachedName="CompanyGroupKey"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_10]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupKey]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CruiseLineKey]"
+                          cachedDataType="guid"
+                          cachedName="CruiseLineKey"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_11]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CruiseLineKey]" />
+                        <inputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].Columns[CompanyGroupShipKey]"
+                          cachedDataType="guid"
+                          cachedName="CompanyGroupShipKey"
+                          externalMetadataColumnId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_12]"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output].Columns[CompanyGroupShipKey]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_0]"
+                          codePage="1252"
+                          dataType="str"
+                          length="10"
+                          name="Param_0">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_1]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Param_1">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_2]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="Param_2">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_3]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Param_3">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_4]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="Param_4">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_5]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Param_5">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_6]"
+                          codePage="1252"
+                          dataType="str"
+                          length="6"
+                          name="Param_6">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_7]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Param_7">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_8]"
+                          dataType="i2"
+                          name="Param_8">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">81</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_9]"
+                          codePage="1252"
+                          dataType="str"
+                          length="150"
+                          name="Param_9">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_10]"
+                          dataType="guid"
+                          name="Param_10">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_11]"
+                          dataType="guid"
+                          name="Param_11">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                        <externalMetadataColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input].ExternalColumns[Param_12]"
+                          dataType="guid"
+                          name="Param_12">
+                          <properties>
+                            <property
+                              dataType="System.Int32"
+                              description="Parameter information.  Matches OLE DB's DBPARAMFLAGSENUM values."
+                              name="DBParamInfoFlags">65</property>
+                          </properties>
+                        </externalMetadataColumn>
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Output]"
+                      exclusionGroup="1"
+                      name="OLE DB Command Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Command Error Output"
+                      synchronousInputId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[change_ship_name]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Inputs[OLE DB Command Input]"
+                  name="change_ship_name"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Outputs[change]" />
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[Lookup Match Output]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Any change?.Inputs[Conditional Split Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[Lookup No Match Output]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Row Count.Inputs[Row Count Input 1]"
+                  name="Lookup No Match Output"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Outputs[Lookup No Match Output]" />
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[OLE DB Command Output]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Row Count Updated.Inputs[Row Count Input 1]"
+                  name="OLE DB Command Output"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip.Outputs[OLE DB Command Output]" />
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[OLE DB Source Output]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted.Inputs[Row Count Input 1]"
+                  name="OLE DB Source Output"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[Row Count Output 1]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Lookup.Inputs[Lookup Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted.Outputs[Row Count Output 1]" />
+                <path
+                  refId="Package\Load Dimension (Ship)\Load DimShip.Paths[Row Count Output 11]"
+                  endId="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\Load Dimension (Ship)\Load DimShip\Row Count.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Ship)\Load SCD DimShip"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{2CA96461-07C1-49C9-87C1-554773175E70}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load SCD DimShip"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dimension (Ship)\Update Dimension Type 2"
+          DTS:CreationName="Microsoft.ExpressionTask"
+          DTS:Description="Expression Task"
+          DTS:DTSID="{0C0A9EDA-2009-458F-96CC-0B61B9CED434}"
+          DTS:ExecutableType="Microsoft.ExpressionTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update Dimension Type 2"
+          DTS:TaskContact="Expression Task;Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExpressionTask
+              Expression="@[User::UpdateDimensionType]==2" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{E242EA56-5777-4CF6-9EFC-C6C1A8904973}"
+          DTS:From="Package\Load Dimension (Ship)\Count initial Row Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Load Dimension (Ship)\Update Dimension Type 2" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{81F6B330-549E-4C4E-B614-5B4251C9B7A1}"
+          DTS:EvalOp="1"
+          DTS:Expression="@[User::UpdateDimensionType]==1"
+          DTS:From="Package\Load Dimension (Ship)\Update Dimension Type 2"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Load Dimension (Ship)\Load DimShip" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{9D41A3C8-AC80-47CA-BAE0-1197E21563A6}"
+          DTS:EvalOp="1"
+          DTS:Expression="@[User::UpdateDimensionType]==2"
+          DTS:From="Package\Load Dimension (Ship)\Update Dimension Type 2"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\Load Dimension (Ship)\Load SCD DimShip" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{60F788A8-14ED-4CA4-970D-8AF674880293}"
+          DTS:From="Package\Load Dimension (Ship)\Load SCD DimShip"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\Load Dimension (Ship)\Count Final Rows" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{5B398416-3DAC-426E-A2B6-08C6898C8828}"
+          DTS:From="Package\Load Dimension (Ship)\Load DimShip"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\Load Dimension (Ship)\Count Final Rows 1" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Run package?"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{19B880F2-84A3-41CB-A6CB-78BA543458F0}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Run package?"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+          SQLTask:SqlStatementSource="SELECT RunStatus FROM &#xA;RunPackages where &#xA;TableName = ? and DatabaseName = ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::RunPackage" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::TableName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::DatabaseName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="129"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update row into audit table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1A624638-4101-47EE-B82A-55F7021BFF4F}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update row into audit table"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{764CA2A8-5F29-433B-85D2-BCBACBE5E6EE}"
+          SQLTask:SqlStatementSource="spAuditEnd ?,?,?,?,?,?,?,?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::RowCountInitial"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::RowCountExtracts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::RowCountInserts"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::RowCountUpdates"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="4"
+            SQLTask:DtsVariableName="User::RowCountFinal"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="5"
+            SQLTask:DtsVariableName="User::RowCountErrors"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="6"
+            SQLTask:DtsVariableName="User::AuditKey"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="7"
+            SQLTask:DtsVariableName="User::FilteredRowCount"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{69550015-9B43-48A7-8801-D034A6B362F2}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::RunPackage]"
+      DTS:From="Package\Run package?"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Insert row into audit table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{217C6A13-27AD-451F-A0C1-D7F6E7CB8929}"
+      DTS:From="Package\Insert row into audit table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Dimension (Ship)" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{157C5C89-2297-4AA0-823D-03CE19F93D07}"
+      DTS:From="Package\Load Dimension (Ship)"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Update row into audit table" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="202,42"
+          Id="Package\Insert row into audit table"
+          TopLeft="79,259" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Load Dimension (Ship)\Count Final Rows"
+          TopLeft="230,279" />
+        <NodeLayout
+          Size="166,42"
+          Id="Package\Load Dimension (Ship)\Count Final Rows 1"
+          TopLeft="27,280" />
+        <NodeLayout
+          Size="194,42"
+          Id="Package\Load Dimension (Ship)\Count initial Row Count"
+          TopLeft="125,17" />
+        <NodeLayout
+          Size="148,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip"
+          TopLeft="29,180" />
+        <NodeLayout
+          Size="174,42"
+          Id="Package\Load Dimension (Ship)\Load SCD DimShip"
+          TopLeft="222,181" />
+        <NodeLayout
+          Size="206,42"
+          Id="Package\Load Dimension (Ship)\Update Dimension Type 2"
+          TopLeft="112,87" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint]"
+          TopLeft="218.5,59">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28"
+              Start="0,0"
+              End="0,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 1]"
+          TopLeft="182,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-79,51"
+              Start="0,0"
+              End="-79,43.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.635838150289" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.635838150289"
+                    Point2="0,20.635838150289"
+                    Point3="-4,20.635838150289" />
+                  <mssgle:LineSegment
+                    End="-75,20.635838150289" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-75,20.635838150289"
+                    Point2="-79,20.635838150289"
+                    Point3="-79,24.635838150289" />
+                  <mssgle:LineSegment
+                    End="-79,43.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-47.5,25.635838150289,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 2]"
+          TopLeft="248,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="61,52"
+              Start="0,0"
+              End="61,44.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.0404624277457" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,17.0404624277457"
+                    Point2="0,21.0404624277457"
+                    Point3="4,21.0404624277457" />
+                  <mssgle:LineSegment
+                    End="57,21.0404624277457" />
+                  <mssgle:CubicBezierSegment
+                    Point1="57,21.0404624277457"
+                    Point2="61,21.0404624277457"
+                    Point3="61,25.0404624277457" />
+                  <mssgle:LineSegment
+                    End="61,44.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="22.5,26.0404624277457,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 3]"
+          TopLeft="311,223">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,56"
+              Start="0,0"
+              End="0,48.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,48.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship).PrecedenceConstraints[Constraint 4]"
+          TopLeft="106.5,222">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58"
+              Start="0,0"
+              End="0,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="450,380"
+          Size="450,423"
+          Id="Package\Load Dimension (Ship)"
+          TopLeft="362,70" />
+        <NodeLayout
+          Size="150,42"
+          Id="Package\Run package?"
+          TopLeft="101,87" />
+        <NodeLayout
+          Size="210,42"
+          Id="Package\Update row into audit table"
+          TopLeft="890,255" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="178,129">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,130"
+              Start="0,0"
+              End="0,122.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,122.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,53.25,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="281,280.75">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="81,0"
+              Start="0,0"
+              End="73.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="73.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="812,278.75">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="78,0"
+              Start="0,0"
+              End="70.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="70.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Load Dimension (Ship)\Load DimShip">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="171,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship"
+          TopLeft="44,42" />
+        <NodeLayout
+          Size="163,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip"
+          TopLeft="125,364" />
+        <NodeLayout
+          Size="183,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Row Count Extracted"
+          TopLeft="276,41" />
+        <NodeLayout
+          Size="133,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Row Count"
+          TopLeft="139,286" />
+        <NodeLayout
+          Size="115,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Lookup"
+          TopLeft="309,141" />
+        <NodeLayout
+          Size="225,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Update ShipName in DimShip"
+          TopLeft="746,281" />
+        <NodeLayout
+          Size="143,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Any change?"
+          TopLeft="459,277" />
+        <NodeLayout
+          Size="178,42"
+          Id="Package\Load Dimension (Ship)\Load DimShip\Row Count Updated"
+          TopLeft="769,382" />
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[Row Count Output 11]"
+          TopLeft="206,328">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36"
+              Start="0,0"
+              End="0,28.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[Row Count Output 1]"
+          TopLeft="367,83">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,58"
+              Start="0,0"
+              End="0,50.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,50.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[OLE DB Source Output]"
+          TopLeft="215,62.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="61,0"
+              Start="0,0"
+              End="53.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="53.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[OLE DB Command Output]"
+          TopLeft="858.25,323">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,59"
+              Start="0,0"
+              End="0,51.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[Lookup No Match Output]"
+          TopLeft="348.666666666667,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-143.166666666667,103"
+              Start="0,0"
+              End="-143.166666666667,95.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.0480274442539" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,38.0480274442539"
+                    Point2="0,42.0480274442539"
+                    Point3="-4,42.0480274442539" />
+                  <mssgle:LineSegment
+                    End="-139.166666666667,42.0480274442539" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-139.166666666667,42.0480274442539"
+                    Point2="-143.166666666667,42.0480274442539"
+                    Point3="-143.166666666667,46.0480274442539" />
+                  <mssgle:LineSegment
+                    End="-143.166666666667,95.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-127.389720052083,47.0480274442539,111.6127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[Lookup Match Output]"
+          TopLeft="384.333333333333,183">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="146.166666666667,94"
+              Start="0,0"
+              End="146.166666666667,86.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.3739279588336" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,34.3739279588336"
+                    Point2="0,38.3739279588336"
+                    Point3="4,38.3739279588336" />
+                  <mssgle:LineSegment
+                    End="142.166666666667,38.3739279588336" />
+                  <mssgle:CubicBezierSegment
+                    Point1="142.166666666667,38.3739279588336"
+                    Point2="146.166666666667,38.3739279588336"
+                    Point3="146.166666666667,42.3739279588336" />
+                  <mssgle:LineSegment
+                    End="146.166666666667,86.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="24.8919466145833,43.3739279588336,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Load Dimension (Ship)\Load DimShip.Paths[change_ship_name]"
+          TopLeft="602,300">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="144,0"
+              Start="0,0"
+              End="136.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="136.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="51.61904296875,5,33.2619140625,11.6630859375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dimension (Ship)\Load DimShip\Read Staging Ship">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dimension (Ship)\Load DimShip\Insert in DimShip">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dimension (Ship)\Load DimShip\Lookup">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string">[dbo].[DimShip]</Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Load Dimension (Ship)\Load SCD DimShip">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="152,42"
+          Id="107"
+          TopLeft="156,198.5" />
+        <NodeLayout
+          Size="215,42"
+          Id="217"
+          TopLeft="0.500000000000114,363.5" />
+        <NodeLayout
+          Size="178,42"
+          Id="103"
+          TopLeft="335,432.5" />
+        <NodeLayout
+          Size="141,42"
+          Id="139"
+          TopLeft="34.0000000000001,298.5" />
+        <NodeLayout
+          Size="176,42"
+          Id="99"
+          TopLeft="354,55.5" />
+        <NodeLayout
+          Size="157,42"
+          Id="57"
+          TopLeft="166.5,5.5" />
+        <NodeLayout
+          Size="218,42"
+          Id="15"
+          TopLeft="740.5,428.5" />
+        <NodeLayout
+          Size="198,42"
+          Id="198"
+          TopLeft="302,307.5" />
+        <NodeLayout
+          Size="173,42"
+          Id="11"
+          TopLeft="358.5,149.5" />
+        <NodeLayout
+          Size="153,43"
+          Id="45"
+          TopLeft="163.5,104.5" />
+        <NodeLayout
+          Size="132,42"
+          Id="2"
+          TopLeft="553.5,428.5" />
+        <NodeLayout
+          Size="123,42"
+          Id="148"
+          TopLeft="158.5,429.5" />
+        <EdgeLayout
+          Id="247"
+          TopLeft="281.5,452">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="53.5,0"
+              Start="0,0"
+              End="46,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="46,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="246"
+          TopLeft="513,451.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="40.5,0"
+              Start="0,0"
+              End="33,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="33,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="245"
+          TopLeft="358.5,176.166666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-50.5,43.3333333333333"
+              Start="0,0"
+              End="-43,43.3333333333333">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-17.3119266055046,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-17.3119266055046,0"
+                    Point2="-21.3119266055046,0"
+                    Point3="-21.3119266055046,4" />
+                  <mssgle:LineSegment
+                    End="-21.3119266055046,39.3333333333333" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-21.3119266055046,39.3333333333333"
+                    Point2="-21.3119266055046,43.3333333333333"
+                    Point3="-25.3119266055046,43.3333333333333" />
+                  <mssgle:LineSegment
+                    End="-43,43.3333333333333" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="244"
+          TopLeft="354,82.1666666666667">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-37.5,38"
+              Start="0,0"
+              End="-30,38">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="-14.7689777327935,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-14.7689777327935,0"
+                    Point2="-18.7689777327935,0"
+                    Point3="-18.7689777327935,4" />
+                  <mssgle:LineSegment
+                    End="-18.7689777327935,34" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-18.7689777327935,34"
+                    Point2="-18.7689777327935,38"
+                    Point3="-22.7689777327935,38" />
+                  <mssgle:LineSegment
+                    End="-30,38" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="243"
+          TopLeft="316.5,131.833333333333">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="42,33"
+              Start="0,0"
+              End="34.5,33">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="16.9787449392712,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="16.9787449392712,0"
+                    Point2="20.9787449392712,0"
+                    Point3="20.9787449392712,4" />
+                  <mssgle:LineSegment
+                    End="20.9787449392712,29" />
+                  <mssgle:CubicBezierSegment
+                    Point1="20.9787449392712,29"
+                    Point2="20.9787449392712,33"
+                    Point3="24.9787449392712,33" />
+                  <mssgle:LineSegment
+                    End="34.5,33" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-5.10500506072876,-17.609375,52.1675,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="242"
+          TopLeft="323.5,26.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="30.5000000000001,44.3333333333333"
+              Start="0,0"
+              End="23.0000000000001,44.3333333333333">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="13.6284403669725,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="13.6284403669725,0"
+                    Point2="17.6284403669725,0"
+                    Point3="17.6284403669725,4" />
+                  <mssgle:LineSegment
+                    End="17.6284403669725,40.3333333333333" />
+                  <mssgle:CubicBezierSegment
+                    Point1="17.6284403669725,40.3333333333333"
+                    Point2="17.6284403669725,44.3333333333333"
+                    Point3="21.6284403669725,44.3333333333333" />
+                  <mssgle:LineSegment
+                    End="23.0000000000001,44.3333333333333" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="241"
+          TopLeft="108,405.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="92.8333333333333,24"
+              Start="0,0"
+              End="92.8333333333333,16.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10.215088282504" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10.215088282504"
+                    Point2="0,14.215088282504"
+                    Point3="4,14.215088282504" />
+                  <mssgle:LineSegment
+                    End="88.8333333333333,14.215088282504" />
+                  <mssgle:CubicBezierSegment
+                    Point1="88.8333333333333,14.215088282504"
+                    Point2="92.8333333333333,14.215088282504"
+                    Point3="92.8333333333333,18.215088282504" />
+                  <mssgle:LineSegment
+                    End="92.8333333333333,16.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="240"
+          TopLeft="235.583333333333,240.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,189"
+              Start="0,0"
+              End="0,181.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,181.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-27.09138671875,85.0332031250001,54.1827734375,11.43359375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="239"
+          TopLeft="196,240.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-91.5,58.0000000000001"
+              Start="0,0"
+              End="-91.5,50.5000000000001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16"
+                    Point2="0,20"
+                    Point3="-4,20" />
+                  <mssgle:LineSegment
+                    End="-87.5,20" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-87.5,20"
+                    Point2="-91.5,20"
+                    Point3="-91.5,24" />
+                  <mssgle:LineSegment
+                    End="-91.5,50.5000000000001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-120.80638671875,25,150.1127734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="238"
+          TopLeft="685.5,449.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="55,0"
+              Start="0,0"
+              End="47.5,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="47.5,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="237"
+          TopLeft="106.25,340.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,23"
+              Start="0,0"
+              End="0,15.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="236"
+          TopLeft="268,240.5">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="133,67"
+              Start="0,0"
+              End="133,59.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.1034482758621" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.1034482758621"
+                    Point2="0,23.1034482758621"
+                    Point3="4,23.1034482758621" />
+                  <mssgle:LineSegment
+                    End="129,23.1034482758621" />
+                  <mssgle:CubicBezierSegment
+                    Point1="129,23.1034482758621"
+                    Point2="133,23.1034482758621"
+                    Point3="133,27.1034482758621" />
+                  <mssgle:LineSegment
+                    End="133,59.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-12.03390625,28.1034482758621,157.0678125,11.6630859375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
